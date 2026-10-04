@@ -52,6 +52,26 @@ dialog::backdrop{background:rgba(8,13,28,.55)}dialog h2{font:800 28px var(--cond
 .code{font:900 34px var(--cond);letter-spacing:.06em;margin:6px 0}.lnk{display:flex;gap:6px}.lnk input{flex:1;min-width:0;font-size:12.5px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--ink)}
 .shst{font-weight:700;font-size:14px}.shst.ok{color:var(--q0)}.shst.bad{color:var(--q5)}
 @media (max-width:600px){.shgrid{grid-template-columns:1fr}.qr{max-width:240px;margin:0 auto}}
+/* mensajes */
+[hidden]{display:none!important}
+.chatfab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;border:0;background:var(--home);color:#fff;font:700 16px var(--body);cursor:pointer;box-shadow:0 12px 30px -10px rgba(0,0,0,.45)}
+.chatfab span{font-size:18px}.chatfab b{background:#E5484D;color:#fff;border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12.5px;padding:0 6px}
+.chattoast{position:fixed;left:50%;top:76px;transform:translateX(-50%);z-index:45;width:min(560px,92vw);background:var(--hero);color:#fff;border-radius:16px;padding:12px 18px;display:flex;flex-direction:column;gap:2px;cursor:pointer;box-shadow:0 18px 40px -12px rgba(0,0,0,.55);border-left:6px solid var(--ha)}
+.chattoast b{font:800 15px var(--cond);text-transform:uppercase;letter-spacing:.06em;color:var(--ha)}.chattoast span{font-size:19px;font-weight:700;line-height:1.25}
+.chattoast.show{animation:toastin .35s ease-out}@keyframes toastin{from{opacity:0;transform:translate(-50%,-12px)}}
+.chatdrawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);z-index:50;background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;transform:translateX(105%);transition:transform .25s ease;box-shadow:-20px 0 40px -20px rgba(0,0,0,.35);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.chatdrawer.open{transform:none}
+.chh{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}.chh b{font:800 21px var(--cond);flex:1}.lock{font-size:12px;color:var(--muted)}
+.chh button{border:0;background:var(--soft);border-radius:999px;width:34px;height:34px;cursor:pointer;color:var(--ink)}
+.chatlist{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:82%;display:flex;flex-direction:column;gap:3px}.msg .mt{padding:9px 13px;border-radius:16px;font-size:15.5px;line-height:1.3;word-wrap:break-word}
+.msg small{font-size:11.5px;color:var(--muted)}.msg.me{align-self:flex-end;align-items:flex-end}.msg.me .mt{background:var(--home);color:#fff;border-bottom-right-radius:4px}
+.msg.them{align-self:flex-start}.msg.them .mt{background:var(--soft);border-bottom-left-radius:4px;border-left:4px solid var(--away)}
+.msg.pend{opacity:.6}.msg.fail .mt{background:var(--q5)}.msg.fail small{color:var(--q5)}
+.quick{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;border-top:1px solid var(--line);scrollbar-width:none}
+.quick button{flex:none;border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--ink)}
+.chatform{display:flex;gap:8px;padding:10px 12px 12px}.chatform input{flex:1;min-width:0;font:16px var(--body);padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--soft);color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.chatdrawer{transition:none}.chattoast.show{animation:none}}
 /* prueba de conexión */
 .diagx{margin:12px 0;display:grid;gap:6px}.dx{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;background:var(--soft);font-size:14px}
 .dx>b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;background:var(--muted);font-size:13px}
@@ -67,6 +87,9 @@ dialog::backdrop{background:rgba(8,13,28,.55)}dialog h2{font:800 28px var(--cond
 .errbox.big{font-size:15px;border-color:var(--q5);background:color-mix(in srgb,var(--q5) 12%,var(--surface))}
 .wbtn.small{margin-top:10px}.wbtn .btn:disabled{opacity:.45;cursor:not-allowed}
 /* bienvenida */
+.drophint{color:var(--muted);font-size:13.5px;margin:8px 0 0}
+body.drag .welcome{outline:3px dashed var(--home);outline-offset:12px;border-radius:24px}
+body.drag::after{content:'Suelta aquí el archivo .dvw';position:fixed;inset:auto 0 24px 0;margin:auto;width:max-content;padding:10px 18px;border-radius:999px;background:var(--home);color:#fff;font-weight:700;z-index:30}
 .welcome{max-width:720px;margin:6vh auto 0;text-align:center}
 .wico{width:96px;height:96px;margin:0 auto 14px;border-radius:24px;background:var(--hero);display:grid;place-items:center}
 .wico span{width:28px;height:28px;border-radius:50%;background:#E5484D;box-shadow:0 0 0 10px color-mix(in srgb,#E5484D 30%,transparent);animation:pulse 1.6s infinite}
@@ -2688,7 +2711,7 @@ async function resume(){const x=await idbGet('last');if(!x)return;const h=x.kind
 function startWatch(){clearInterval(st.timer);st.timer=setInterval(()=>tick(false),2000)}
 async function listDvw(dir){const out=[];for await(const [name,h] of dir.entries()){if(h.kind==='file'&&/\.dvw$/i.test(name)){try{const f=await h.getFile();out.push({name,h,f})}catch(e){}}}out.sort((a,b)=>b.f.lastModified-a.f.lastModified);return out}
 async function currentFile(){const src=st.src;if(!src)return null;
-  if(src.kind==='file')return await src.h.getFile();
+  if(src.kind==='file'){try{return await src.h.getFile()}catch(e){if(e&&e.name==='NotFoundError'){const er=new Error('el archivo no está en este momento (DataVolley puede estar guardándolo); se reintenta');er.name='Transient';throw er}throw e}}
   const L=await listDvw(src.dir);st.folderList=L.map(x=>({name:x.name,mod:x.f.lastModified}));if(!L.length)throw new Error('no hay ningún .dvw en la carpeta');
   const pick=src.pin?L.find(x=>x.name===src.pin):L[0];if(!pick)throw new Error('no se encuentra «'+src.pin+'» en la carpeta');
   const fh=await src.dir.getFileHandle(pick.name);return await fh.getFile()}
@@ -2712,12 +2735,12 @@ function updDiag(){const el=$('#diag');if(!el)return;const D=st.diag||{};const s
   if(!src){el.innerHTML=st.status==='manual'?`<b>Carga manual:</b> este panel no se actualiza solo. Para que sí lo haga, ábrelo descargado en Chrome o Edge y usa «Elegir la carpeta de los partidos».`:'';el.hidden=st.status!=='manual';return}
   el.hidden=false;const ago=D.lastCheck?Math.round((Date.now()-D.lastCheck)/1000):null;
   el.innerHTML=`<details ${D.err?'open':''}><summary>${D.err?'⚠ ':''}Lectura: ${esc(D.name||'—')} · guardado en disco a las <b>${hm(D.mod)}</b> · comprobado hace ${ago??'–'} s</summary>
-   <div class="dg"><span>Modo</span><b>${src.kind==='dir'?'Carpeta (sigue el .dvw guardado más recientemente)':'Un archivo'}</b>
+   <div class="dg"><span>Modo</span><b>${src.kind==='dir'?'Carpeta «'+esc(src.dir.name)+'» (sigue el .dvw guardado más recientemente)':'Archivo «'+esc(src.h.name)+'»'}</b>
    <span>Tamaño</span><b>${D.size!=null?(D.size/1024).toFixed(1)+' KB':'–'}</b><span>Lecturas con cambios</span><b>${D.reads||0} de ${D.checks||0} comprobaciones</b><span>Puntos leídos</span><b>${D.rallies??'–'}</b>
    ${D.err?`<span>Último problema</span><b class="bad">${esc(D.err)}</b>`:''}
    ${src.kind==='dir'&&st.folderList?`<span>Archivo</span><b><select id="pinSel"><option value="">El más reciente</option>${st.folderList.slice(0,30).map(x=>`<option value="${esc(x.name)}" ${src.pin===x.name?'selected':''}>${esc(x.name)} · ${hm(x.mod)}</option>`).join('')}</select></b>`:''}</div>
-   <p class="note">Si al pulsar Guardar en DataVolley la hora «guardado en disco» no cambia, DataVolley está guardando en otro archivo u otra carpeta: usa «Elegir la carpeta de los partidos» con la carpeta donde guarda DataVolley.</p>
-   <div class="dgb"><button class="btn" data-a="force">Leer ahora</button><button class="btn" data-a="pickdir">Elegir otra carpeta</button></div></details>`;
+   <p class="note">Si al pulsar Guardar en DataVolley la hora «guardado en disco» no cambia, DataVolley está guardando en otro archivo: elige el archivo correcto o usa «Seguir una carpeta» con la carpeta donde guarda DataVolley.</p>
+   <div class="dgb"><button class="btn" data-a="force">Leer ahora</button>${src.kind==='file'?'<button class="btn" data-a="pick">Elegir otro archivo</button><button class="btn" data-a="pickdir">Seguir una carpeta en su lugar</button>':'<button class="btn" data-a="pickdir">Elegir otra carpeta</button><button class="btn" data-a="pick">Seguir un archivo concreto</button>'}</div></details>`;
   const ps=$('#pinSel');if(ps)ps.onchange=e=>{st.src.pin=e.target.value||null;idbSet('last',{kind:'dir',dir:st.src.dir,pin:st.src.pin});st.lastMod=0;tick(true)}}
 if(!VIEWER)setInterval(()=>{if(st.src&&!document.querySelector('#diag details[open]'))updDiag()},1000);
 
@@ -2821,20 +2844,22 @@ function feedHTML(M){const R=M.rallies.slice(-8).reverse();const us=st.us;
     const who=a.num!=null?pName(a.team,a.num):M.teams[a.team].name;const lab=(EV_LABEL[a.skill]||{})[a.ev]||a.ev;return`${who} · ${SKILL_NAMES[a.skill]} ${lab.toLowerCase()}`};
   return`<section class="card feed flashme"><div class="ch"><h2>Últimos puntos</h2></div>${R.map((r,i)=>`<div class="fd ${r.winner===us?'w':'l'}${i===0?' newest':''}"><b>${r.score[us]}–${r.score[1-us]}</b><span>${esc(how(r))}</span></div>`).join('')||'<p class="note">Esperando el primer punto.</p>'}</section>`}
 function welcomeHTML(){const sup=canWatch();
-  return`<section class="welcome"><div class="wico" aria-hidden="true"><span></span></div><h1>Panel en directo</h1>
-   ${inFrame?`<div class="errbox big"><b>Estás viendo el panel dentro de otra página.</b> Así no puede seguir el archivo de DataVolley. <b>Descárgalo</b> (botón de descarga) y ábrelo con doble clic desde tu ordenador, con Chrome o Edge.</div>`:''}
-   <p class="lede">Elige la <b>carpeta donde DataVolley guarda tus partidos</b>. El panel sigue automáticamente el .dvw que se haya guardado más recientemente: cada vez que pulses <b>Guardar</b> en DataVolley, se actualiza en unos 2 segundos. Solo lee, nunca modifica nada.</p>
+  return`<section class="welcome" id="dropzone"><div class="wico" aria-hidden="true"><span></span></div><h1>Panel en directo</h1>
+   ${inFrame?`<div class="errbox big"><b>Estás viendo el panel dentro de otra página.</b> Así no puede seguir el archivo de DataVolley. <b>Descárgalo</b> y ábrelo con doble clic desde tu ordenador, con Chrome o Edge.</div>`:''}
+   <p class="lede">Elige el <b>archivo .dvw del partido</b> que estás scouteando. Cada vez que pulses <b>Guardar</b> en DataVolley, el panel se actualiza solo en unos 2 segundos. Solo lee el archivo: nunca lo modifica.</p>
    ${st.err&&st.status==='wait'?`<p class="errbox">Todavía no se ha podido leer: ${esc(st.err)}. Se reintenta solo.</p>`:''}
-   <div class="wbtn"><button class="btn primary big" data-a="pickdir" ${sup?'':'disabled'}>Elegir la carpeta de los partidos</button><span id="resumeSlot"></span></div>
-   <div class="wbtn small"><button class="btn" data-a="pick" ${sup?'':'disabled'}>O elegir solo un archivo .dvw</button><label class="btn">Cargar una vez (sin actualizar)<input type="file" accept=".dvw" id="fin2"></label></div>
+   <div class="wbtn"><button class="btn primary big" data-a="pick" ${sup?'':'disabled'}>Elegir el archivo del partido (.dvw)</button><span id="resumeSlot"></span></div>
+   <p class="drophint">o arrastra aquí el archivo .dvw</p>
+   <div class="wbtn small"><button class="btn" data-a="pickdir" ${sup?'':'disabled'}>Seguir una carpeta (el .dvw guardado más reciente)</button><label class="btn">Cargar una vez (sin actualizar)<input type="file" accept=".dvw" id="fin2"></label></div>
    ${sup||inFrame?'':'<p class="errbox">Este navegador no permite seguir archivos mientras cambian. Abre el panel con <b>Chrome</b> o <b>Edge</b>.</p>'}
-   <ol class="steps"><li>En DataVolley, crea el partido y <b>guárdalo una vez</b>.</li><li>Pulsa «Elegir la carpeta de los partidos», elige la carpeta donde se guardó y pulsa <b>Ver archivos</b> / <b>Permitir</b>.</li><li>Scoutea normal y pulsa <b>Guardar</b> cuando quieras ver los datos al día. Arriba verás a qué hora se guardó el archivo por última vez.</li></ol>
+   <ol class="steps"><li>En DataVolley, crea el partido y <b>guárdalo una vez</b>.</li><li>Pulsa «Elegir el archivo del partido», elige ese .dvw y, si el navegador lo pregunta, pulsa <b>Permitir</b>.</li><li>Scoutea normal y pulsa <b>Guardar</b> cuando quieras ver los datos al día. Arriba verás a qué hora se guardó el archivo por última vez.</li></ol>
+   <p class="note">Si al guardar el panel no cambia, usa «Seguir una carpeta»: algunos programas guardan creando un archivo nuevo y el panel lo encontrará igualmente.</p>
    <div class="simbox"><b>¿Quieres probarlo antes del partido?</b><span>Elige un .dvw ya scouteado y el panel lo reproduce punto a punto como si fuera en directo.</span><label class="btn">Simular con un partido guardado<input type="file" accept=".dvw" id="simin"></label></div></section>`}
 function updStatus(){const el=$('#status');if(!el)return;const t=st.updated?st.updated.toLocaleTimeString('es-ES'):'';
   const L=st.M&&st.M.rallies.length?st.M.rallies[st.M.rallies.length-1]:null;const sc=L?` · Set ${L.set} · ${L.score[st.us]}–${L.score[1-st.us]}`:'';
   const map={remote:['live','En directo'],offline:['bad','Sin conexión, reintentando'],nopub:['warn','Esperando a que el ordenador comparta el partido'],live:['live','En directo'],retry:['warn','Reintentando lectura'],perm:['bad','Sin permiso: vuelve a elegir el archivo'],manual:['bad','Carga manual: no se actualiza sola'],sim:['sim','Simulación'],wait:['warn','Esperando'],idle:['','']};
   const [cls,txt]=map[st.status]||['',''];el.className='status '+cls;el.style.display=txt?'':'none';el.innerHTML=`<i></i>${txt}${t?` · actualizado ${t}`:''}${sc}`;
-  $('#fname').textContent=st.file||'';
+  $('#fname').textContent=st.file||'';const cb=$('#changeBtn');if(cb)cb.textContent=st.src&&st.src.kind==='dir'?'Cambiar carpeta':'Cambiar archivo';
   const sb=$('#scopeSeg');if(sb)sb.innerHTML=[['set','Set actual'],['match','Partido']].map(([k,l])=>`<button class="${st.scope===k?'on':''}" data-scope="${k}">${l}</button>`).join('');
   const tb=$('#teamSel');if(tb&&st.M)tb.innerHTML=`Nosotros: <select id="usSel">${st.M.teams.map((x,i)=>`<option value="${i}" ${i===st.us?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`;
   const us=$('#usSel');if(us)us.onchange=e=>{st.us=+e.target.value;render()};
@@ -2843,12 +2868,12 @@ function showErr(m){const e=$('#err');e.textContent=m;e.hidden=false;setTimeout(
 
 /* ---------- eventos ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a],[data-scope],[data-speed],[data-theme-t]');if(!b)return;
-  if(b.dataset.a==='pick')pickFile();else if(b.dataset.a==='pickdir')pickFolder();else if(b.dataset.a==='force'){st.lastMod=0;tick(true)}else if(b.dataset.a==='resume')resume();else if(b.dataset.a==='stopsim'){stopSim();st.status='idle';updStatus()}
+  if(b.dataset.a==='change'){(st.src&&st.src.kind==='dir')?pickFolder():pickFile()}else if(b.dataset.a==='pick')pickFile();else if(b.dataset.a==='pickdir')pickFolder();else if(b.dataset.a==='force'){st.lastMod=0;tick(true)}else if(b.dataset.a==='resume')resume();else if(b.dataset.a==='stopsim'){stopSim();st.status='idle';updStatus()}
   else if(b.dataset.scope){st.scope=b.dataset.scope;render()}else if(b.dataset.speed&&st.sim){st.sim.speed=+b.dataset.speed;updStatus()}
   else if(b.hasAttribute('data-theme-t')){const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';try{localStorage.setItem('pd-theme',r.dataset.theme)}catch(_){}}});
 document.addEventListener('change',e=>{if(e.target.id==='simin'&&e.target.files[0])startSim(e.target.files[0]);if((e.target.id==='fin'||e.target.id==='fin2')&&e.target.files[0])loadOnce(e.target.files[0]);if(e.target.type==='file')e.target.value=''});
-document.addEventListener('dragover',e=>e.preventDefault());
-document.addEventListener('drop',async e=>{e.preventDefault();const it=e.dataTransfer.items&&e.dataTransfer.items[0];
+document.addEventListener('dragover',e=>{e.preventDefault();document.body.classList.add('drag')});document.addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('drag')});
+document.addEventListener('drop',async e=>{e.preventDefault();document.body.classList.remove('drag');const it=e.dataTransfer.items&&e.dataTransfer.items[0];
   if(it&&it.getAsFileSystemHandle){try{const h=await it.getAsFileSystemHandle();if(h&&h.kind==='file'){await useSource({kind:'file',h});return}if(h&&h.kind==='directory'){await useSource({kind:'dir',dir:h,pin:null});return}}catch(_){}}
   const f=e.dataTransfer.files[0];if(f)loadOnce(f)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&st.src)tick(false)});
@@ -2876,7 +2901,7 @@ function viewerWaitHTML(){if(!VW.url||!VW.code)return`<section class="welcome"><
   return`<section class="welcome"><div class="wico" aria-hidden="true"><span></span></div><h1>Banquillo</h1><p class="lede">Partido <b>${esc(VW.code)}</b>. ${st.status==='nopub'?'Esperando a que el ordenador empiece a compartir el partido…':st.status==='offline'?'Sin conexión. Se reintenta solo.':'Conectando…'}</p></section>`}
 async function vConnect(){if(!VW.url||!VW.code){render();return}
   try{await loadLib(LIB_SB,'supabase');VW.sb=window.supabase.createClient(VW.url,VW.anon,{auth:{persistSession:false,autoRefreshToken:false}});
-    VW.sb.channel('pd-'+VW.code).on('broadcast',{event:'nuevo'},()=>vFetch()).subscribe();
+    VW.chan=VW.sb.channel('pd-'+VW.code,{config:{broadcast:{self:false}}}).on('broadcast',{event:'nuevo'},()=>vFetch()).on('broadcast',{event:'msg'},()=>{if(typeof chatFetch==='function')chatFetch()});VW.chan.subscribe();
     await vFetch();clearInterval(VW.timer);VW.timer=setInterval(vFetch,15000)}
   catch(e){st.status='offline';render();setTimeout(vConnect,8000)}}
 async function vFetch(){if(!VW.sb||VW.busy)return;VW.busy=true;
@@ -2895,6 +2920,50 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)vFetch()});
 window.addEventListener('online',()=>vFetch());
 render();vConnect();
+
+/* ===== Mensajes entre el scout y el banquillo ===== */
+const CH={msgs:[],last:0,unread:0,open:false,busy:false,timer:null,sending:false};
+function chatCtx(){if(typeof VW!=='undefined'&&VIEWER)return VW.sb&&VW.code?{sb:VW.sb,code:VW.code,role:'banquillo',key:null}:null;
+  if(typeof SH!=='undefined')return SH.on&&SH.sb?{sb:SH.sb,code:SH.code,role:'scout',key:SH.key}:null;return null}
+const ME=()=>VIEWER?'banquillo':'scout';
+const QUICK={scout:['Rotación con problemas en recepción','Su mejor atacante está en zona 4','Sacad a zona 1','Nos falla mucho el saque','¿Pido tiempo muerto?'],
+  banquillo:['¿Cómo va la recepción?','¿Qué rotación nos hace más daño?','¿Hacia dónde ataca el rival?','Recibido','Gracias']};
+function chatReady(){const ok=!!chatCtx();const fab=$('#chatFab');if(fab)fab.hidden=!ok;if(ok&&!CH.timer){chatFetch();CH.timer=setInterval(chatFetch,10000)}}
+async function chatFetch(){const c=chatCtx();if(!c||CH.busy)return;CH.busy=true;
+  try{const {data,error}=await c.sb.rpc('leer_mensajes',{p_codigo:c.code,p_desde:CH.last});if(error)throw error;
+    const nuevos=(data||[]).filter(m=>!CH.msgs.some(x=>x.id===m.id));if(nuevos.length){CH.msgs.push(...nuevos);CH.last=Math.max(CH.last,...nuevos.map(m=>m.id));
+      const deOtro=nuevos.filter(m=>m.autor!==ME());if(deOtro.length&&CH.loaded){if(!CH.open)CH.unread+=deOtro.length;notify(deOtro[deOtro.length-1])}
+      chatRender()}CH.loaded=true;CH.err=''}
+  catch(e){CH.err='No se han podido cargar los mensajes'}finally{CH.busy=false;chatBadge()}}
+async function chatSend(txt){txt=(txt||'').trim();const c=chatCtx();if(!txt||!c||CH.sending)return;CH.sending=true;
+  const tmp={id:-Date.now(),autor:ME(),texto:txt,creado:new Date().toISOString(),pend:true};CH.msgs.push(tmp);chatRender();
+  try{const {data,error}=await c.sb.rpc('enviar_mensaje',{p_codigo:c.code,p_autor:c.role,p_texto:txt,p_clave:c.key});if(error)throw error;
+    const row=Array.isArray(data)?data[0]:data;tmp.id=row.id;tmp.creado=row.creado;tmp.pend=false;CH.last=Math.max(CH.last,row.id);
+    try{const chan=VIEWER?VW.chan:SH.ch;chan&&chan.send({type:'broadcast',event:'msg',payload:{id:row.id}})}catch(_){}}
+  catch(e){tmp.pend=false;tmp.fail=(e&&e.message)||'error';}finally{CH.sending=false;chatRender()}}
+function notify(m){const t=$('#chatToast');if(t&&!CH.open){t.innerHTML=`<b>${m.autor==='scout'?'Scout':'Banquillo'}</b><span>${esc(m.texto)}</span>`;t.hidden=false;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');clearTimeout(CH.tt);CH.tt=setTimeout(()=>{t.hidden=true},9000)}
+  try{const C=window.AudioContext||window.webkitAudioContext;const ac=CH.ac||(CH.ac=new C());const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=880;g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.25,ac.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+.35);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+.4)}catch(_){}
+  try{navigator.vibrate&&navigator.vibrate([120,60,120])}catch(_){}}
+function chatBadge(){const b=$('#chatBadge');if(b){b.textContent=CH.unread;b.hidden=!CH.unread}const base=document.title.replace(/^\(\d+\) /,'');document.title=(CH.unread?`(${CH.unread}) `:'')+base}
+function chatRender(){const L=$('#chatList');if(!L)return;const me=ME();
+  L.innerHTML=CH.msgs.length?CH.msgs.map(m=>`<div class="msg ${m.autor===me?'me':'them'}${m.pend?' pend':''}${m.fail?' fail':''}"><span class="mt">${esc(m.texto)}</span><small>${m.autor===me?'Tú':m.autor==='scout'?'Scout':'Banquillo'} · ${new Date(m.creado).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})}${m.pend?' · enviando…':''}${m.fail?' · no enviado: '+esc(m.fail):''}</small></div>`).join('')
+    :`<p class="note">Todavía no hay mensajes. Escribe abajo o usa un mensaje rápido.</p>`;
+  L.scrollTop=L.scrollHeight;chatBadge()}
+function chatOpen(v){CH.open=v;const d=$('#chatDrawer');if(!d)return;d.classList.toggle('open',v);if(v){CH.unread=0;chatBadge();chatRender();const i=$('#chatInput');setTimeout(()=>i&&i.focus(),50);const t=$('#chatToast');if(t)t.hidden=true}}
+function chatInit(){const me=ME();const other=me==='scout'?'el banquillo':'el scout';
+  document.body.insertAdjacentHTML('beforeend',`<button id="chatFab" class="chatfab" hidden aria-label="Mensajes"><span>💬</span>Mensajes<b id="chatBadge" hidden>0</b></button>
+   <div id="chatToast" class="chattoast" hidden role="status" aria-live="polite"></div>
+   <aside id="chatDrawer" class="chatdrawer" aria-label="Mensajes con ${other}"><div class="chh"><b>Mensajes con ${other}</b><span class="lock">🔒 Solo vosotros dos</span><button id="chatClose" aria-label="Cerrar">✕</button></div>
+    <div id="chatList" class="chatlist"></div>
+    <div class="quick">${QUICK[me].map(q=>`<button data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+    <form id="chatForm" class="chatform" autocomplete="off"><input id="chatInput" maxlength="500" placeholder="Escribe un mensaje…"><button class="btn primary" type="submit">Enviar</button></form></aside>`);
+  $('#chatFab').onclick=()=>chatOpen(!CH.open);$('#chatClose').onclick=()=>chatOpen(false);
+  $('#chatToast').onclick=()=>chatOpen(true);
+  $('#chatForm').onsubmit=e=>{e.preventDefault();const i=$('#chatInput');chatSend(i.value);i.value=''};
+  document.querySelector('.quick').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(b)chatSend(b.dataset.q)});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&CH.open)chatOpen(false)});
+  setInterval(chatReady,1500)}
+chatInit();
 
 </script>
 </body></html>
