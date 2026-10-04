@@ -52,6 +52,30 @@ dialog::backdrop{background:rgba(8,13,28,.55)}dialog h2{font:800 28px var(--cond
 .code{font:900 34px var(--cond);letter-spacing:.06em;margin:6px 0}.lnk{display:flex;gap:6px}.lnk input{flex:1;min-width:0;font-size:12.5px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--ink)}
 .shst{font-weight:700;font-size:14px}.shst.ok{color:var(--q0)}.shst.bad{color:var(--q5)}
 @media (max-width:600px){.shgrid{grid-template-columns:1fr}.qr{max-width:240px;margin:0 auto}}
+/* bloques personalizables */
+.lay{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;align-items:start}
+.blk{min-width:0}.blk>section{height:100%}.blk.s2{grid-column:span 2}.blk.s4{grid-column:span 4}.blk.s6{grid-column:span 6}
+.lay.dense{gap:10px}.lay.dense .card{padding:10px 12px}.lay.dense .hero{padding:12px 16px 8px}.lay.dense .ch{margin-bottom:4px}
+@media (max-width:1100px){.lay{grid-template-columns:repeat(4,minmax(0,1fr))}.blk.s6{grid-column:span 4}}
+@media (max-width:720px){.lay{grid-template-columns:minmax(0,1fr)}.blk.s2,.blk.s4,.blk.s6{grid-column:auto}}
+.mworm .worm{height:140px;background:var(--hero);border-radius:12px}.msets{display:flex;gap:4px;margin-top:6px;font-size:12px;color:var(--muted)}.msets span{border-top:3px solid var(--line);padding-top:3px;min-width:0;overflow:hidden;white-space:nowrap}
+.lgd{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:6px}.lgd i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.psr{display:grid;grid-template-columns:52px 1fr 1fr;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}.psr>b{font:800 17px var(--cond)}.psr small{font-size:11px;color:var(--muted)}
+.hbar{display:flex;align-items:center;gap:6px;margin:2px 0}.hbar span{display:block;height:9px;border-radius:5px;min-width:2px}.hbar b{font:800 14px var(--cond)}
+.pbr{display:grid;grid-template-columns:minmax(0,120px) 1fr 46px 34px;gap:8px;align-items:center;padding:5px 0;font-size:14px}.pbr span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pbr b{font:800 18px var(--cond);text-align:right}.pbr small{color:var(--muted);font-size:12px}.stk{display:flex;height:16px;border-radius:6px;overflow:hidden;background:var(--soft)}.stk i{display:block;height:100%}
+/* ventana personalizar */
+.uidlg{max-width:min(720px,96vw);max-height:92vh}.uidlg::backdrop{background:rgba(8,13,28,.18)}.uih{display:flex;justify-content:space-between;align-items:center}.uih button{border:0;background:var(--soft);border-radius:999px;width:34px;height:34px;cursor:pointer;color:var(--ink)}
+.uidlg h3{font:800 16px var(--cond);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:16px 0 8px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}.presets button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-weight:700;cursor:pointer;color:var(--ink)}.presets button:hover{border-color:var(--home)}
+.blist{display:grid;gap:6px}.bi{display:grid;grid-template-columns:auto 1fr auto 34px 34px;gap:8px;align-items:center;padding:7px 10px;border-radius:12px;background:var(--soft)}
+.bi.off{opacity:.55}.bi b{font-size:14.5px}.bi select{border:1px solid var(--line);border-radius:8px;padding:4px 6px;background:var(--surface);color:var(--ink);font-size:13px}
+.bi button{border:1px solid var(--line);background:var(--surface);border-radius:8px;height:30px;cursor:pointer;color:var(--ink);font-weight:800}.bi button:disabled{opacity:.3;cursor:default}
+.sw{position:relative;width:40px;height:24px;flex:none}.sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:1}.sw span{position:absolute;inset:0;border-radius:999px;background:var(--line);transition:background .15s}
+.sw span::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s}.sw input:checked+span{background:var(--q0)}.sw input:checked+span::after{transform:translateX(16px)}
+.sw input:focus-visible+span{outline:3px solid var(--home);outline-offset:2px}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}.chk2{display:flex;align-items:center;gap:6px;font-size:14px}
+@media (max-width:600px){.bi{grid-template-columns:auto 1fr 34px 34px}.bi select{grid-column:2/-1;grid-row:2}}
 /* mensajes */
 [hidden]{display:none!important}
 .chatfab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;border:0;background:var(--home);color:#fff;font:700 16px var(--body);cursor:pointer;box-shadow:0 12px 30px -10px rgba(0,0,0,.45)}
@@ -181,7 +205,7 @@ body.drag::after{content:'Suelta aquí el archivo .dvw';position:fixed;inset:aut
 <body>
 <header><div class="hin">
  <div class="brand"><i></i>Banquillo</div><span id="fname"></span><span id="status" class="status"></span><span class="sp"></span>
- <div id="bar" style="display:none"><div class="seg" id="scopeSeg"></div><label class="sel" id="teamSel"></label><span id="simctl" hidden></span>
+ <div id="bar" style="display:none"><button class="btn" data-a="custom">⚙ Personalizar</button><div class="seg" id="scopeSeg"></div><label class="sel" id="teamSel"></label><span id="simctl" hidden></span>
  <button class="btn" data-v="dl">Descargar .dvw</button></div>
  <button class="icon" data-theme-t title="Modo claro u oscuro" aria-label="Cambiar entre modo claro y oscuro">◐</button>
 </div></header>
@@ -2687,7 +2711,20 @@ const TC=['var(--home)','var(--away)'];
 const shortName=p=>p?(p.last?((p.first?p.first[0]+'. ':'')+p.last):(p.nick||'')):'';
 const pName=(t,num)=>{const p=st.M.nameOf(t,num);return '#'+num+(p?' '+shortName(p):'')};
 const VIEWER=!!window.PD_VIEWER;
-const st={raw:'',M:null,file:'',us:null,scope:'set',handle:null,lastMod:0,lastSize:0,updated:null,status:'idle',sim:null,timer:null,err:'',busy:false,lastKey:''};
+/* ---------- personalización (se guarda en este dispositivo) ---------- */
+const BLOCKS=[['hero','Marcador y evolución del set',6],['so','Side-out y break',2],['rot','Nuestras rotaciones',2],['alerts','Avisos',2],['players','Nuestros jugadores',4],['rival','Peligro del rival',2],
+  ['origin','De dónde salen los puntos',2],['phase','Ataque y recepción',2],['feed','Últimos puntos',2],['match','Evolución del partido completo',6],['setso','Side-out y break por set',2],['recp','Recepción por jugador',2],['attp','Ataque por jugador',2]];
+const COLS=[['pts','Puntos'],['err','Errores'],['att','Ataque'],['eff','Eficacia'],['rec','Recepción'],['srv','Saque'],['blk','Bloqueo']];
+const ALS=[['run','Parciales seguidos'],['rot','Rotaciones con poco side-out'],['srv','Errores de saque'],['ply','Nuestros jugadores (ataque y recepción)'],['riv','Jugadores peligrosos del rival'],['good','Avisos positivos']];
+const PRESETS={completo:{l:'Completo',hide:{match:1,setso:1,recp:1,attp:1},zoom:1},esencial:{l:'Esencial',order:['hero','alerts','so','rot','players'],hide:{rival:1,origin:1,phase:1,feed:1,match:1,setso:1,recp:1,attp:1},zoom:1},
+  grande:{l:'Banquillo, letra grande',order:['hero','alerts','so','rot','feed'],hide:{players:1,rival:1,origin:1,phase:1,match:1,setso:1,recp:1,attp:1},zoom:1.3},
+  graficos:{l:'Todos los gráficos',hide:{},zoom:1,order:['hero','match','so','setso','rot','alerts','attp','recp','players','rival','origin','phase','feed']}};
+const UIKEY=VIEWER?'pd-ui-banquillo':'pd-ui-panel';
+function defUI(){return{order:BLOCKS.map(b=>b[0]),hide:{match:1,setso:1,recp:1,attp:1},span:{},zoom:VIEWER?1.1:1,dense:false,worm:true,feedN:8,scope:'set',cols:Object.fromEntries(COLS.map(c=>[c[0],1])),al:Object.fromEntries(ALS.map(a=>[a[0],1]))}}
+function loadUI(){let u=defUI();try{const x=JSON.parse(localStorage.getItem(UIKEY)||'null');if(x)u={...u,...x,cols:{...u.cols,...(x.cols||{})},al:{...u.al,...(x.al||{})}}}catch(e){}
+  BLOCKS.forEach(b=>{if(!u.order.includes(b[0]))u.order.push(b[0])});u.order=u.order.filter(k=>BLOCKS.some(b=>b[0]===k));return u}
+const UI=loadUI();function saveUI(){try{localStorage.setItem(UIKEY,JSON.stringify(UI))}catch(e){}}
+const st={raw:'',M:null,file:'',us:null,scope:UI.scope||'set',handle:null,lastMod:0,lastSize:0,updated:null,status:'idle',sim:null,timer:null,err:'',busy:false,lastKey:''};
 
 /* ---------- guardar el último archivo elegido (IndexedDB) ---------- */
 function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('panel-directo-dv',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
@@ -2778,9 +2815,11 @@ function render(flash){const main=$('#main');$('#bar').style.display=st.M?'conte
   const M=st.M,us=st.us,them=1-us;const L=liveInfo(M);
   const Ms=st.scope==='set'?scopeM(M,L.set):M;const S=aug(analyze(Ms));const U=S.team[us],T=S.team[them];
   const scopeTxt=st.scope==='set'?`Set ${L.set}`:'Partido';
-  main.innerHTML=heroHTML(M,L)+`<div class="g3">${soHTML(U,T,scopeTxt)}${rotHTML(U,L,scopeTxt)}${alertsHTML(M,Ms,S,L)}</div>
-    <div class="g21">${playersHTML(U,scopeTxt)}${rivalHTML(T,S)}</div>
-    <div class="g3">${originHTML(S)}${phaseHTML(U,T)}${feedHTML(M)}</div>`;
+  const F={hero:()=>heroHTML(M,L),so:()=>soHTML(U,T,scopeTxt),rot:()=>rotHTML(U,L,scopeTxt),alerts:()=>alertsHTML(M,Ms,S,L),players:()=>playersHTML(U,scopeTxt),rival:()=>rivalHTML(T,S),
+    origin:()=>originHTML(S),phase:()=>phaseHTML(U,T),feed:()=>feedHTML(M),match:()=>matchHTML(M),setso:()=>setSoHTML(M),recp:()=>recpHTML(U,scopeTxt),attp:()=>attpHTML(U,scopeTxt)};
+  const vis=UI.order.filter(k=>!UI.hide[k]&&F[k]);
+  main.innerHTML=`<div class="lay${UI.dense?' dense':''}" style="zoom:${UI.zoom}">${vis.map(k=>{let h='';try{h=F[k]()}catch(e){h=`<section class="card"><p class="note">No se ha podido dibujar este bloque.</p></section>`}
+    return`<div class="blk s${UI.span[k]||BLOCKS.find(b=>b[0]===k)[2]}" data-blk="${k}">${h}</div>`}).join('')||'<section class="card"><p class="note">Has ocultado todos los bloques. Pulsa «Personalizar» para elegir qué ver.</p></section>'}</div>`;
   if(flash)document.querySelectorAll('.flashme').forEach(e=>{e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash')});
   updStatus()}
 function heroHTML(M,L){const us=st.us,them=1-us;const T=M.teams;const sc=L.sc;
@@ -2792,7 +2831,7 @@ function heroHTML(M,L){const us=st.us,them=1-us;const T=M.teams;const sc=L.sc;
     <div class="hs"><span class="hsets">${L.setsWon[us]}</span><div class="hcur"><b class="${sc[us]>sc[them]?'lead':''}">${sc[us]}</b><em>${L.done?'Fin del set '+L.set:'Set '+L.set}</em><b class="${sc[them]>sc[us]?'lead':''}">${sc[them]}</b></div><span class="hsets">${L.setsWon[them]}</span></div>
     <div class="ht them">${L.serving===them?'<span class="srv" title="Saca">●</span>':''}<b>${esc(T[them].name)}</b><i></i></div></div>
    <div class="hmeta"><div class="chips">${setChips}</div><div class="hinfo">${L.rot[us]?`<span>Colocador en <b>${L.rot[us]}</b></span>`:''}${run&&run.n>=2?`<span class="run t${run.team===us?'u':'r'}">Parcial ${run.n}–0 ${run.team===us?'nuestro':'del rival'}</span>`:''}<span>${setR.length} rallies en el set</span></div></div>
-   ${wormSVG(setR,us)}</section>`}
+   ${UI.worm?wormSVG(setR,us):''}</section>`}
 function soHTML(U,T,sc){const row=(lbl,a,b,na,nb)=>`<div class="sorow"><span class="sol">${lbl}</span>
    <div class="soc us">${ring(a,'var(--home)')}<b>${fp(a)}</b><small>${na}</small></div><div class="soc them">${ring(b,'var(--away)')}<b>${fp(b)}</b><small>${nb}</small></div></div>`;
   const so=pct(U.so.won,U.so.n),so2=pct(T.so.won,T.so.n),bp=pct(U.bp.won,U.bp.n),bp2=pct(T.bp.won,T.bp.n);
@@ -2805,27 +2844,43 @@ function rotHTML(U,L,sc){const order=[4,3,2,5,6,1];const cur=L.rot[st.us];
      return`<div class="rc ${p===cur?'now':''} ${r.so.n>=3?lv:''}"><span class="rp">P${p}${p===cur?' · ahora':''}</span><b>${fp(so)}</b><small>SO ${r.so.won}/${r.so.n} · BP ${fp(bp)}</small><i class="${net>0?'pos':net<0?'neg':''}">${net>0?'+':''}${net}</i></div>`}).join('')}</div>
    <p class="note">Número grande: side-out con el colocador en esa posición. Recuadro marcado: la rotación en la que estamos.</p></section>`}
 function alertsHTML(M,Ms,S,L){const us=st.us,them=1-us;const U=S.team[us],T=S.team[them];const out=[];
-  const add=(lvl,txt)=>out.push({lvl,txt});
-  const run=runNow(M.rallies);if(run&&run.n>=3)add(run.team===us?'good':'bad',`Parcial ${run.n}–0 ${run.team===us?'a favor':'del rival'}`);
-  for(let p=1;p<=6;p++){const r=U.rot[p];if(r.so.n>=4&&r.so.won/r.so.n<.45)add('bad',`Colocador en ${p}: solo ${r.so.won}/${r.so.n} en side-out`)}
-  const myServes=M.actions.filter(a=>a.team===us&&a.skill==='S');const lastS=myServes.slice(-3);if(lastS.length===3&&lastS.every(a=>a.ev==='='))add('bad','3 errores de saque seguidos');
-  else if(U.serve.n>=6&&U.serve.err/U.serve.n>.25)add('warn',`Saque: ${U.serve.err} errores de ${U.serve.n}`);
-  U.players.forEach(p=>{if(p.A.n>=5&&p.attEff<0)add('warn',`${pName(us,p.num)}: eficacia de ataque ${fp(p.attEff)} (${p.A.n} ataques)`);
-    if(p.R.n>=5&&p.R.pos/p.R.n<.4)add('warn',`Recepción de ${pName(us,p.num)}: ${fp(p.R.pos/p.R.n*100)} positiva (${p.R.n})`)});
-  T.players.forEach(p=>{if(p.A.n>=5&&p.A.kill>=4&&p.A.kill/p.A.n>=.5)add('bad',`Ojo con ${pName(them,p.num)}: ${p.A.kill}/${p.A.n} en ataque`);if(p.S.ace>=2)add('warn',`Saque peligroso de ${pName(them,p.num)}: ${p.S.ace} aces`)});
-  if(T.serve.n>=6&&T.serve.err/T.serve.n>.25)add('good',`El rival falla saques: ${T.serve.err} de ${T.serve.n}`);
-  if(U.rec.n>=6&&U.rec.pos/U.rec.n>=.6)add('good',`Buena recepción: ${fp(U.rec.pos/U.rec.n*100)} positiva`);
+  const add=(lvl,txt,ty)=>{if(UI.al[ty]!==0&&!(lvl==='good'&&!UI.al.good))out.push({lvl,txt})};
+  const run=runNow(M.rallies);if(run&&run.n>=3)add(run.team===us?'good':'bad',`Parcial ${run.n}–0 ${run.team===us?'a favor':'del rival'}`,'run');
+  for(let p=1;p<=6;p++){const r=U.rot[p];if(r.so.n>=4&&r.so.won/r.so.n<.45)add('bad',`Colocador en ${p}: solo ${r.so.won}/${r.so.n} en side-out`,'rot')}
+  const myServes=M.actions.filter(a=>a.team===us&&a.skill==='S');const lastS=myServes.slice(-3);if(lastS.length===3&&lastS.every(a=>a.ev==='='))add('bad','3 errores de saque seguidos','srv');
+  else if(U.serve.n>=6&&U.serve.err/U.serve.n>.25)add('warn',`Saque: ${U.serve.err} errores de ${U.serve.n}`,'srv');
+  U.players.forEach(p=>{if(p.A.n>=5&&p.attEff<0)add('warn',`${pName(us,p.num)}: eficacia de ataque ${fp(p.attEff)} (${p.A.n} ataques)`,'ply');
+    if(p.R.n>=5&&p.R.pos/p.R.n<.4)add('warn',`Recepción de ${pName(us,p.num)}: ${fp(p.R.pos/p.R.n*100)} positiva (${p.R.n})`,'ply')});
+  T.players.forEach(p=>{if(p.A.n>=5&&p.A.kill>=4&&p.A.kill/p.A.n>=.5)add('bad',`Ojo con ${pName(them,p.num)}: ${p.A.kill}/${p.A.n} en ataque`,'riv');if(p.S.ace>=2)add('warn',`Saque peligroso de ${pName(them,p.num)}: ${p.S.ace} ${p.S.ace===1?'ace':'aces'}`,'riv')});
+  if(T.serve.n>=6&&T.serve.err/T.serve.n>.25)add('good',`El rival falla saques: ${T.serve.err} de ${T.serve.n}`,'good');
+  if(U.rec.n>=6&&U.rec.pos/U.rec.n>=.6)add('good',`Buena recepción: ${fp(U.rec.pos/U.rec.n*100)} positiva`,'good');
   const ord={bad:0,warn:1,good:2};out.sort((a,b)=>ord[a.lvl]-ord[b.lvl]);
   return`<section class="card alerts flashme"><div class="ch"><h2>Avisos</h2><span class="tag">${st.scope==='set'?'Set '+L.set:'Partido'}</span></div>
    ${out.length?out.slice(0,7).map(a=>`<div class="al ${a.lvl}"><i></i><span>${esc(a.txt)}</span></div>`).join(''):'<p class="note">Sin avisos por ahora.</p>'}</section>`}
 function playersHTML(U,sc){const ps=U.players.filter(p=>p.S.n||p.R.n||p.A.n||p.B.n).sort((a,b)=>b.pts-a.pts||b.A.n-a.A.n);const mx=Math.max(1,...ps.map(p=>p.pts));
-  const eff=p=>p.A.n?p.attEff:null;
+  const eff=p=>p.A.n?p.attEff:null;const C=UI.cols;
+  const defs=[['pts','Pts',p=>`<td class="pts"><span style="width:${p.pts/mx*100}%"></span><b>${p.pts}</b></td>`],['err','Err',p=>`<td class="${p.errs>=3?'neg':''}">${p.errs}</td>`],
+    ['att','Ataque',p=>`<td>${p.A.n?`${p.A.kill}/${p.A.n}`:'–'}</td>`],['eff','Ef%',p=>`<td class="ef ${eff(p)==null?'':eff(p)>=30?'good':eff(p)>=0?'mid':'bad'}">${fp(eff(p))}</td>`],
+    ['rec','Recepción',p=>`<td>${p.R.n?`<span class="rq ${p.R.pos/p.R.n>=.6?'good':p.R.pos/p.R.n>=.4?'mid':'bad'}">${fp(p.R.pos/p.R.n*100)}</span> <small>${p.R.n}</small>`:'–'}</td>`],
+    ['srv','Saque',p=>`<td>${p.S.n?`${p.S.ace}<small> ace</small> · ${p.S.err}<small> err</small>`:'–'}</td>`],['blk','Blq',p=>`<td>${p.B.pts||'–'}</td>`]].filter(d=>C[d[0]]);
   return`<section class="card flashme"><div class="ch"><h2>Nuestros jugadores</h2><span class="tag">${sc}</span></div><div class="tw"><table class="pt">
-   <thead><tr><th>Jugador</th><th>Pts</th><th>Err</th><th>Ataque</th><th>Ef%</th><th>Recepción</th><th>Saque</th><th>Blq</th></tr></thead><tbody>
-   ${ps.map(p=>`<tr><td class="nm"><b>#${p.num}</b> ${esc(shortName(p.info)||'')}</td><td class="pts"><span style="width:${p.pts/mx*100}%"></span><b>${p.pts}</b></td><td class="${p.errs>=3?'neg':''}">${p.errs}</td>
-     <td>${p.A.n?`${p.A.kill}/${p.A.n}`:'–'}</td><td class="ef ${eff(p)==null?'':eff(p)>=30?'good':eff(p)>=0?'mid':'bad'}">${fp(eff(p))}</td>
-     <td>${p.R.n?`<span class="rq ${p.R.pos/p.R.n>=.6?'good':p.R.pos/p.R.n>=.4?'mid':'bad'}">${fp(p.R.pos/p.R.n*100)}</span> <small>${p.R.n}</small>`:'–'}</td>
-     <td>${p.S.n?`${p.S.ace}<small> ace</small> · ${p.S.err}<small> err</small>`:'–'}</td><td>${p.B.pts||'–'}</td></tr>`).join('')||'<tr><td colspan="8" class="note">Todavía sin acciones.</td></tr>'}</tbody></table></div></section>`}
+   <thead><tr><th>Jugador</th>${defs.map(d=>`<th>${d[1]}</th>`).join('')}</tr></thead><tbody>
+   ${ps.map(p=>`<tr><td class="nm"><b>#${p.num}</b> ${esc(shortName(p.info)||'')}</td>${defs.map(d=>d[2](p)).join('')}</tr>`).join('')||`<tr><td colspan="${defs.length+1}" class="note">Todavía sin acciones.</td></tr>`}</tbody></table></div></section>`}
+/* gráficos opcionales */
+function matchHTML(M){const us=st.us;const sets=[...new Set(M.rallies.map(r=>r.set))];
+  return`<section class="card flashme"><div class="ch"><h2>Evolución del partido completo</h2></div><div class="mworm">${wormSVG(M.rallies,us,140)}</div>
+   <div class="msets">${sets.map(s=>{const R=M.rallies.filter(r=>r.set===s);const l=R[R.length-1];return`<span style="flex:${R.length}">Set ${s} · ${l.score[us]}–${l.score[1-us]}</span>`}).join('')}</div></section>`}
+function setSoHTML(M){const us=st.us,them=1-us;const sets=[...new Set(M.rallies.map(r=>r.set))];
+  const rows=sets.map(s=>{const S=analyze(scopeM(M,s));const a=S.team[us],b=S.team[them];return{s,so:pct(a.so.won,a.so.n),so2:pct(b.so.won,b.so.n),bp:pct(a.bp.won,a.bp.n),bp2:pct(b.bp.won,b.bp.n)}});
+  const bar=(v,c)=>`<div class="hbar"><span style="width:${v??0}%;background:${c}"></span><b>${fp(v)}</b></div>`;
+  return`<section class="card flashme"><div class="ch"><h2>Side-out y break por set</h2></div><div class="lgd"><span><i style="background:var(--home)"></i>Nosotros</span><span><i style="background:var(--away)"></i>Rival</span></div>
+   ${rows.map(r=>`<div class="psr"><b>Set ${r.s}</b><div><small>Side-out</small>${bar(r.so,'var(--home)')}${bar(r.so2,'var(--away)')}</div><div><small>Break</small>${bar(r.bp,'var(--home)')}${bar(r.bp2,'var(--away)')}</div></div>`).join('')||'<p class="note">Sin datos todavía.</p>'}</section>`}
+function recpHTML(U,sc){const ps=U.players.filter(p=>p.R.n).sort((a,b)=>b.R.n-a.R.n);
+  return`<section class="card flashme"><div class="ch"><h2>Recepción por jugador</h2><span class="tag">${sc}</span></div><div class="lgd"><span><i style="background:var(--q0)"></i>Perfecta</span><span><i style="background:var(--q1)"></i>Positiva</span><span><i style="background:var(--q5)"></i>Error</span></div>
+   ${ps.map(p=>{const pf=p.R.perf/p.R.n*100,po=(p.R.pos-p.R.perf)/p.R.n*100,er=p.R.err/p.R.n*100;return`<div class="pbr"><span>${esc(pName(st.us,p.num))}</span><div class="stk"><i style="width:${pf}%;background:var(--q0)"></i><i style="width:${po}%;background:var(--q1)"></i><i style="width:${Math.max(0,100-pf-po-er)}%;background:var(--q2)"></i><i style="width:${er}%;background:var(--q5)"></i></div><b>${fp(p.R.pos/p.R.n*100)}</b><small>${p.R.n}</small></div>`}).join('')||'<p class="note">Sin recepciones todavía.</p>'}</section>`}
+function attpHTML(U,sc){const ps=U.players.filter(p=>p.A.n).sort((a,b)=>b.A.n-a.A.n);
+  return`<section class="card flashme"><div class="ch"><h2>Ataque por jugador</h2><span class="tag">${sc}</span></div><div class="lgd"><span><i style="background:var(--q0)"></i>Punto</span><span><i style="background:var(--q2)"></i>Sigue</span><span><i style="background:var(--q5)"></i>Error o bloqueado</span></div>
+   ${ps.map(p=>{const k=p.A.kill/p.A.n*100,e=(p.A.err+p.A.blk)/p.A.n*100;return`<div class="pbr"><span>${esc(pName(st.us,p.num))}</span><div class="stk"><i style="width:${k}%;background:var(--q0)"></i><i style="width:${Math.max(0,100-k-e)}%;background:var(--q2)"></i><i style="width:${e}%;background:var(--q5)"></i></div><b class="${p.attEff>=30?'good':p.attEff>=0?'mid':'bad'}">${fp(p.attEff)}</b><small>${p.A.kill}/${p.A.n}</small></div>`}).join('')||'<p class="note">Sin ataques todavía.</p>'}</section>`}
 function rivalHTML(T,S){const ps=T.players.filter(p=>p.A.n).sort((a,b)=>b.A.kill-a.A.kill||b.A.n-a.A.n).slice(0,4);const sv=T.players.filter(p=>p.S.n).sort((a,b)=>(b.S.ace-b.S.err)-(a.S.ace-a.S.err)).slice(0,2);
   return`<section class="card rival flashme"><div class="ch"><h2>Peligro del rival</h2></div>
    <h3>Atacantes</h3>${ps.map(p=>`<div class="rv"><span>${esc(pName(1-st.us,p.num))}</span><div class="rvb"><span style="width:${pct(p.A.kill,p.A.n)||0}%"></span></div><b>${p.A.kill}/${p.A.n}</b></div>`).join('')||'<p class="note">Sin ataques todavía.</p>'}
@@ -2839,7 +2894,7 @@ function phaseHTML(U,T){const k=(o)=>fp(pct(o.kill,o.n));const r=x=>fp(pct(x.rec
   const line=(l,a,b)=>`<div class="ph"><span>${l}</span><b class="us">${a}</b><b class="them">${b}</b></div>`;
   return`<section class="card flashme"><div class="ch"><h2>Ataque y recepción</h2></div><div class="ph head"><span></span><b class="us">Nos.</b><b class="them">Rival</b></div>
    ${line('Ataque: % de punto',k(U.att),k(T.att))}${line('Ataque: eficacia',fp(eff(U.att)),fp(eff(T.att)))}${line('Tras recepción',k(U.k1),k(T.k1))}${line('Contraataque',k(U.k2),k(T.k2))}${line('Recepción positiva',r(U),r(T))}${line('Recepción perfecta',fp(pct(U.rec.perf,U.rec.n)),fp(pct(T.rec.perf,T.rec.n)))}</section>`}
-function feedHTML(M){const R=M.rallies.slice(-8).reverse();const us=st.us;
+function feedHTML(M){const R=M.rallies.slice(-(UI.feedN||8)).reverse();const us=st.us;
   const how=r=>{const a=[...r.actions].reverse().find(x=>x.ev==='#'||x.ev==='='||(x.skill==='A'&&x.ev==='/'))||r.actions[r.actions.length-1];if(!a)return'—';
     const who=a.num!=null?pName(a.team,a.num):M.teams[a.team].name;const lab=(EV_LABEL[a.skill]||{})[a.ev]||a.ev;return`${who} · ${SKILL_NAMES[a.skill]} ${lab.toLowerCase()}`};
   return`<section class="card feed flashme"><div class="ch"><h2>Últimos puntos</h2></div>${R.map((r,i)=>`<div class="fd ${r.winner===us?'w':'l'}${i===0?' newest':''}"><b>${r.score[us]}–${r.score[1-us]}</b><span>${esc(how(r))}</span></div>`).join('')||'<p class="note">Esperando el primer punto.</p>'}</section>`}
@@ -2868,8 +2923,8 @@ function showErr(m){const e=$('#err');e.textContent=m;e.hidden=false;setTimeout(
 
 /* ---------- eventos ---------- */
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a],[data-scope],[data-speed],[data-theme-t]');if(!b)return;
-  if(b.dataset.a==='change'){(st.src&&st.src.kind==='dir')?pickFolder():pickFile()}else if(b.dataset.a==='pick')pickFile();else if(b.dataset.a==='pickdir')pickFolder();else if(b.dataset.a==='force'){st.lastMod=0;tick(true)}else if(b.dataset.a==='resume')resume();else if(b.dataset.a==='stopsim'){stopSim();st.status='idle';updStatus()}
-  else if(b.dataset.scope){st.scope=b.dataset.scope;render()}else if(b.dataset.speed&&st.sim){st.sim.speed=+b.dataset.speed;updStatus()}
+  if(b.dataset.a==='custom'){openCustom()}else if(b.dataset.a==='change'){(st.src&&st.src.kind==='dir')?pickFolder():pickFile()}else if(b.dataset.a==='pick')pickFile();else if(b.dataset.a==='pickdir')pickFolder();else if(b.dataset.a==='force'){st.lastMod=0;tick(true)}else if(b.dataset.a==='resume')resume();else if(b.dataset.a==='stopsim'){stopSim();st.status='idle';updStatus()}
+  else if(b.dataset.scope){st.scope=b.dataset.scope;UI.scope=st.scope;saveUI();render()}else if(b.dataset.speed&&st.sim){st.sim.speed=+b.dataset.speed;updStatus()}
   else if(b.hasAttribute('data-theme-t')){const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;r.dataset.theme=dark?'light':'dark';try{localStorage.setItem('pd-theme',r.dataset.theme)}catch(_){}}});
 document.addEventListener('change',e=>{if(e.target.id==='simin'&&e.target.files[0])startSim(e.target.files[0]);if((e.target.id==='fin'||e.target.id==='fin2')&&e.target.files[0])loadOnce(e.target.files[0]);if(e.target.type==='file')e.target.value=''});
 document.addEventListener('dragover',e=>{e.preventDefault();document.body.classList.add('drag')});document.addEventListener('dragleave',e=>{if(!e.relatedTarget)document.body.classList.remove('drag')});
@@ -2881,6 +2936,36 @@ window.addEventListener('focus',()=>{if(st.src)tick(false)});
 try{const th=localStorage.getItem('pd-theme');if(th)document.documentElement.dataset.theme=th}catch(_){}
 if(!VIEWER)render();
 if(!VIEWER)(async()=>{const x=await idbGet('last');const slot=$('#resumeSlot');if(x&&slot&&canWatch()){const nm=x.kind==='dir'?'la carpeta «'+x.dir.name+'»':'«'+((x.h||x).name)+'»';slot.innerHTML=`<button class="btn big" data-a="resume">Seguir con ${esc(nm)}</button>`}})();
+
+/* ---------- ventana «Personalizar» ---------- */
+function openCustom(){let d=$('#uiDlg');if(!d){document.body.insertAdjacentHTML('beforeend','<dialog id="uiDlg" class="uidlg"><div id="uiBody"></div></dialog>');d=$('#uiDlg');
+    d.addEventListener('click',e=>{if(e.target===d){d.close();return}const b=e.target.closest('[data-ui]');if(!b)return;const [k,v]=b.dataset.ui.split(':');
+      if(k==='close'){d.close();return}
+      if(k==='up'||k==='down'){const i=UI.order.indexOf(v),j=k==='up'?i-1:i+1;if(j<0||j>=UI.order.length)return;[UI.order[i],UI.order[j]]=[UI.order[j],UI.order[i]]}
+      else if(k==='preset'){const P=PRESETS[v];const base=defUI();UI.hide={...(P.hide||{})};UI.order=P.order?[...P.order,...base.order.filter(x=>!P.order.includes(x))]:base.order;UI.zoom=P.zoom;UI.span={}}
+      else if(k==='reset'){Object.assign(UI,defUI())}
+      else return;saveUI();renderCustom();render()});
+    d.addEventListener('change',e=>{const t=e.target;const k=t.dataset.uic;if(!k)return;const [a,b]=k.split(':');
+      if(a==='show')UI.hide[b]=t.checked?0:1;else if(a==='span')UI.span[b]=+t.value;else if(a==='zoom')UI.zoom=+t.value;else if(a==='dense')UI.dense=t.checked;
+      else if(a==='worm')UI.worm=t.checked;else if(a==='feedN')UI.feedN=+t.value;else if(a==='col')UI.cols[b]=t.checked?1:0;else if(a==='al')UI.al[b]=t.checked?1:0;
+      saveUI();render();if(a==='show')renderCustom()})}
+  renderCustom();if(!d.open)d.showModal()}
+function renderCustom(){const box=$('#uiBody');if(!box)return;const name=Object.fromEntries(BLOCKS.map(b=>[b[0],b[1]]));const def=Object.fromEntries(BLOCKS.map(b=>[b[0],b[2]]));
+  box.innerHTML=`<div class="uih"><h2>Personalizar</h2><button data-ui="close" aria-label="Cerrar">✕</button></div>
+   <p class="note">Los cambios se ven al momento y se guardan en este ${VIEWER?'móvil':'ordenador'}. ${VIEWER?'El scout tiene su propia configuración.':'El banquillo tiene su propia configuración.'}</p>
+   <h3>Configuraciones rápidas</h3><div class="presets">${Object.entries(PRESETS).map(([k,p])=>`<button data-ui="preset:${k}">${p.l}</button>`).join('')}</div>
+   <h3>Qué bloques se ven y en qué orden</h3><div class="blist">${UI.order.map((k,i)=>`<div class="bi ${UI.hide[k]?'off':''}">
+     <label class="sw"><input type="checkbox" data-uic="show:${k}" ${UI.hide[k]?'':'checked'}><span></span></label><b>${esc(name[k])}</b>
+     <select data-uic="span:${k}" aria-label="Ancho de ${esc(name[k])}">${[[2,'⅓ de ancho'],[4,'⅔ de ancho'],[6,'Ancho completo']].map(([v,l])=>`<option value="${v}" ${(UI.span[k]||def[k])===v?'selected':''}>${l}</option>`).join('')}</select>
+     <button data-ui="up:${k}" ${i?'':'disabled'} aria-label="Subir">↑</button><button data-ui="down:${k}" ${i<UI.order.length-1?'':'disabled'} aria-label="Bajar">↓</button></div>`).join('')}</div>
+   <h3>Cómo se ven los datos</h3><div class="opts">
+    <label class="sel">Tamaño <select data-uic="zoom">${[[.9,'Pequeño'],[1,'Normal'],[1.15,'Grande'],[1.3,'Muy grande']].map(([v,l])=>`<option value="${v}" ${UI.zoom===v?'selected':''}>${l}</option>`).join('')}</select></label>
+    <label class="chk2"><input type="checkbox" data-uic="dense" ${UI.dense?'checked':''}> Más compacto</label>
+    <label class="chk2"><input type="checkbox" data-uic="worm" ${UI.worm?'checked':''}> Gráfico de evolución en el marcador</label>
+    <label class="sel">Últimos puntos <select data-uic="feedN">${[5,8,12,20].map(v=>`<option ${UI.feedN===v?'selected':''}>${v}</option>`).join('')}</select></label></div>
+   <h3>Columnas de la tabla de jugadores</h3><div class="opts">${COLS.map(([k,l])=>`<label class="chk2"><input type="checkbox" data-uic="col:${k}" ${UI.cols[k]?'checked':''}> ${l}</label>`).join('')}</div>
+   <h3>Avisos que se muestran</h3><div class="opts">${ALS.map(([k,l])=>`<label class="chk2"><input type="checkbox" data-uic="al:${k}" ${UI.al[k]?'checked':''}> ${l}</label>`).join('')}</div>
+   <div class="dlgb"><button class="btn" data-ui="reset">Restablecer lo de fábrica</button><button class="btn primary" data-ui="close">Listo</button></div>`}
 
 /* ===== Compartir con el banquillo (Supabase) ===== */
 const LIB_SB='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js';
