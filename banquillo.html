@@ -466,6 +466,18 @@ body.drag::after{content:'Suelta aquí el archivo .dvw';position:fixed;inset:aut
  .eer.bad{color:var(--q5)}.eef.good{color:var(--q0)}.eef.mid{color:var(--q3)}.eef.bad{color:var(--q5)}
  .ebar{grid-column:1/-1;display:grid;gap:2px;padding-left:1.8em}.ebar .evb{height:7px}.ebar small{font-size:10.5px;color:var(--muted)}
 }
+@media (max-width:820px){
+ .etools{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px 2px}.etools .eseg{margin:0}.etools .eseg button{padding:7px 11px}
+ .elg{display:flex;flex-wrap:wrap;gap:3px 10px;font-size:10.5px;color:var(--muted);padding:2px 4px 6px;border-bottom:1px solid var(--line)}.elg span{display:flex;align-items:center;gap:4px}.elg i{width:10px;height:8px;border-radius:2px;display:inline-block}.elg .r{margin-left:auto}
+ .elg .k,.ev2 .k{background:var(--q0)}.elg .p,.ev2 .p{background:var(--q2)}.elg .e,.ev2 .e{background:var(--q5)}.elg .b,.ev2 .b{background:var(--q4)}
+ .ebar2{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:8px;align-items:center;padding-left:1.8em;margin-top:2px}
+ .ev2{display:flex;height:10px;gap:1px;border-radius:3px;overflow:hidden;background:color-mix(in srgb,var(--line) 45%,transparent)}.ev2 i{display:block;height:100%}
+ .ef2{position:relative;height:10px;border-radius:3px;background:color-mix(in srgb,var(--line) 45%,transparent)}
+ .ef2 .z{position:absolute;top:-2px;bottom:-2px;width:2px;margin-left:-1px;background:var(--ink);opacity:.55}
+ .ef2 .v{position:absolute;top:1px;bottom:1px;border-radius:2px;background:var(--muted)}.ef2 .v.good{background:var(--q0)}.ef2 .v.mid{background:var(--q3)}.ef2 .v.bad{background:var(--q5)}
+ .ekk{grid-column:1/-1;padding-left:2.2em;font-size:10.5px;color:var(--muted)}
+ .en u{text-decoration:none;font:700 9.5px var(--body);color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 3px;flex:none}
+}
 </style></head>
 <body>
 <header><div class="hin">
@@ -3608,24 +3620,36 @@ function edurneHTML(){const C=st._ctx;const {M,L,Ms,S,U,T,PU}=C;const us=st.us,t
   const state=`<div class="jcard est" data-g="so" role="button" tabindex="0">
     <div class="eh"><span></span><span class="u">Nosotros</span><span></span><span class="r">Rival</span></div>${body}
     <div class="ex"><span>TM ${E.to[us].length}/2 · Camb. ${E.sub[us].length}/6</span>${run&&run.n>=2&&!L.done?`<span class="${run.team===us?'g':'b'}">Parcial ${run.n}–0 ${run.team===us?'nuestro':'rival'}</span>`:''}<span>TM ${E.to[them].length}/2 · Camb. ${E.sub[them].length}/6</span></div>${verdict}</div>`;
-  /* jugadores por posición */
+  /* ataque individual, comparable entre jugadores */
   const t=GL.edT==null?us:GL.edT;const X=S.team[t];const Lu=L.done?null:curLineup(M,t);const onC=n=>Lu&&Lu.includes(n);
   const atts=Ms.actions.filter(a=>a.team===t&&a.skill==='A');
-  const ps=X.players.filter(p=>!(p.info&&p.info.libero));
-  const groups=ED_ROLES.map(([r,lbl])=>{const g=ps.filter(p=>(p.info.role||0)===r&&(p.A.n||onC(p.num))).sort((a,b)=>b.A.n-a.A.n||a.num-b.num);if(!g.length)return'';
+  const ps=X.players.filter(p=>!(p.info&&p.info.libero)&&(p.A.n||onC(p.num)));
+  const maxN=Math.max(1,...ps.map(p=>p.A.n));
+  const EMIN=-50,EMAX=100,ez=v=>(Math.max(EMIN,Math.min(EMAX,v))-EMIN)/(EMAX-EMIN)*100,z0=ez(0);
+  const RA={2:'REC',3:'OPU',4:'CEN',5:'COL'};
+  const row=(p,showRole)=>{const A=p.A;const ef=A.n?p.attEff:null;const k1=atts.filter(a=>a.num===p.num&&a.k1),k2=atts.filter(a=>a.num===p.num&&!a.k1);
+    const e1=k1.length?eff(k1.reduce((o,a)=>{addAtt(o,a);return o},blank())):null,e2=k2.length?eff(k2.reduce((o,a)=>{addAtt(o,a);return o},blank())):null;
+    const play=A.n-A.kill-A.err-A.blk;const W=v=>(v/maxN*100).toFixed(1)+'%';
+    const vol=A.n?`<span class="ev2" title="${A.kill} punto · ${play} en juego · ${A.err} error · ${A.blk} bloqueado"><i class="k" style="width:${W(A.kill)}"></i><i class="p" style="width:${W(play)}"></i><i class="e" style="width:${W(A.err)}"></i><i class="b" style="width:${W(A.blk)}"></i></span>`:'<span class="ev2"></span>';
+    const efb=ef==null?'<span class="ef2"></span>':`<span class="ef2"><i class="z" style="left:${z0}%"></i><i class="v ${glLv(ef,30,15)}" style="left:${Math.min(z0,ez(ef))}%;width:${Math.max(1.5,Math.abs(ez(ef)-z0))}%"></i></span>`;
+    return`<button class="ep" data-g="statsT:${t}:A"><span class="en"><b>${p.num}</b><span>${esc(p.info.last?tc(p.info.last):p.info.nick||'')}</span>${showRole&&RA[p.info.role]?`<u>${RA[p.info.role]}</u>`:''}${onC(p.num)?'<i title="En pista">●</i>':''}</span>
+      <span class="ek"><b>${A.kill}</b>/${A.n}</span><span class="epc">${fp(pct(A.kill,A.n))}</span><span class="eer ${A.err+A.blk?'bad':''}">${A.err+A.blk}</span><span class="eef ${ef==null?'':glLv(ef,30,15)}">${fp(ef)}</span>
+      <span class="ebar2">${vol}${efb}</span>${A.n?`<small class="ekk">Tras recepción ${fp(e1)} · Transición ${fp(e2)}</small>`:'<small class="ekk">Sin ataques todavía</small>'}</button>`};
+  const view=GL.edV||'pos';let list='';
+  if(view==='rank'){list=`<div class="eg">${ps.slice().sort((a,b)=>((b.A.n?b.attEff:-999)-(a.A.n?a.attEff:-999))||b.A.kill-a.A.kill||b.A.n-a.A.n).map(p=>row(p,true)).join('')}</div>`}
+  else list=ED_ROLES.map(([r,lbl])=>{const g=ps.filter(p=>(p.info.role||0)===r).sort((a,b)=>b.A.n-a.A.n||a.num-b.num);if(!g.length)return'';
     const tot=g.reduce((o,p)=>{o.n+=p.A.n;o.kill+=p.A.kill;o.err+=p.A.err;o.blk+=p.A.blk;return o},{n:0,kill:0,err:0,blk:0});const te=eff(tot);
-    return`<div class="eg"><div class="egh"><b>${lbl}</b><span>${tot.kill}/${tot.n} · ${fp(pct(tot.kill,tot.n))} pto · ef. <em class="${glLv(te,30,15)}">${fp(te)}</em></span></div>
-     ${g.map(p=>{const A=p.A;const ef=A.n?p.attEff:null;const o=evCount(atts.filter(a=>a.num===p.num));const k1=atts.filter(a=>a.num===p.num&&a.k1),k2=atts.filter(a=>a.num===p.num&&!a.k1);
-       const e1=k1.length?eff(k1.reduce((o,a)=>{addAtt(o,a);return o},blank())):null,e2=k2.length?eff(k2.reduce((o,a)=>{addAtt(o,a);return o},blank())):null;
-       return`<button class="ep" data-g="statsT:${t}:A"><span class="en"><b>${p.num}</b><span>${esc(p.info.last?tc(p.info.last):p.info.nick||'')}</span>${onC(p.num)?'<i title="En pista">●</i>':''}</span>
-        <span class="ek"><b>${A.kill}</b>/${A.n}</span><span class="epc">${fp(pct(A.kill,A.n))}</span><span class="eer ${A.err+A.blk?'bad':''}">${A.err+A.blk}</span><span class="eef ${ef==null?'':glLv(ef,30,15)}">${fp(ef)}</span>
-        ${A.n?`<span class="ebar">${evBar('A',o)}<small>Recep. ${fp(e1)} · Trans. ${fp(e2)}</small></span>`:'<span class="ebar"><small>Sin ataques todavía</small></span>'}</button>`}).join('')}</div>`}).join('');
+    return`<div class="eg"><div class="egh"><b>${lbl}</b><span>${tot.kill}/${tot.n} · ef. <em class="${glLv(te,30,15)}">${fp(te)}</em></span></div>${g.map(p=>row(p,false)).join('')}</div>`}).join('');
   return`<section class="jsec" id="eEst"><h2>Estado del partido <small>${tag}</small></h2>${state}</section>
-   <section class="jsec" id="ePos"><h2>Ataque por posiciones</h2>
-    <div class="eseg"><button class="${t===us?'on':''}" data-edt="${us}">Nosotros</button><button class="${t!==us?'on':''}" data-edt="${them}">Rival</button></div>
-    <div class="jcard jnoa epw"><div class="ephd"><span>Jugador</span><span>Pto/Atq</span><span>% pto</span><span>Err</span><span>Efic.</span></div>${groups||'<p class="jnone">Sin ataques todavía.</p>'}</div>
-    <p class="note">● en pista ahora · Err = errores + bloqueados · Eficacia = (puntos − errores − bloqueados) / ataques · Recep. y Trans. = eficacia tras recepción y en transición. Toca un jugador para ver la tabla de ataque completa.</p></section>`}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-edt]');if(!b)return;GL.edT=+b.dataset.edt;render()});
+   <section class="jsec" id="ePos"><h2>Ataque individual</h2>
+    <div class="etools"><div class="eseg"><button class="${t===us?'on':''}" data-edt="${us}">Nosotros</button><button class="${t!==us?'on':''}" data-edt="${them}">Rival</button></div>
+     <div class="eseg"><button class="${view==='pos'?'on':''}" data-edv="pos">Por posición</button><button class="${view==='rank'?'on':''}" data-edv="rank">Ranking</button></div></div>
+    <div class="jcard jnoa epw"><div class="ephd"><span>Jugador</span><span>Pto/Atq</span><span>% pto</span><span>Err</span><span>Efic.</span></div>
+     <div class="elg"><span><i class="k"></i>Punto</span><span><i class="p"></i>En juego</span><span><i class="e"></i>Error</span><span><i class="b"></i>Bloqueado</span><span class="r">Eficacia: −50 · <b>0</b> · +100</span></div>
+     ${list||'<p class="jnone">Sin ataques todavía.</p>'}</div>
+    <p class="note">Todas las barras usan la misma escala para poder comparar: la barra de colores es más larga cuantos más ataques tiene el jugador, y la segunda barra marca su eficacia respecto al 0. ● en pista ahora · Err = errores + bloqueados · Eficacia = (puntos − errores − bloqueados) / ataques. Toca un jugador para ver la tabla completa.</p></section>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-edt],[data-edv]');if(!b)return;if(b.dataset.edv)GL.edV=b.dataset.edv;else GL.edT=+b.dataset.edt;render()});
+
 /* detalle de saque de un jugador */
 function srvSheetHTML(t,num){const C=st._ctx;const {M,Ms}=C;const us=st.us,them=1-us;const arr=Ms.actions.filter(a=>a.team===t&&a.skill==='S'&&a.num===num);const info=M.nameOf(t,num)||{};
   const recv=a=>{const r=M.rallies[a.rally];if(!r)return null;return r.actions.find(x=>x.skill==='R'&&x.team!==t)||null};
