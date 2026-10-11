@@ -2828,7 +2828,7 @@ function parseDVW(text){
   const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/);
   const sec={},secStart={};let cur=null;
   lines.forEach((l,i)=>{const m=l.match(/^\[(3?[A-Z0-9\-]+)\]/);if(m){cur=m[1].replace(/^3/,'');sec[cur]=[];secStart[cur]=i+1;return}if(cur!==null)sec[cur].push(l)});
-  if(!sec.SCOUT||!sec.SCOUT.some(l=>l.trim()))throw new Error('El archivo no contiene la sección [3SCOUT]. Comprueba que sea un .dvw guardado desde DataVolley.');
+  if(!sec.SCOUT||(!sec.SCOUT.some(l=>l.trim())&&!(sec['PLAYERS-H']||[]).concat(sec['PLAYERS-V']||[]).some(l=>/^\s*[01];\d+;/.test(l))))throw new Error('El archivo no contiene la sección [3SCOUT]. Comprueba que sea un .dvw guardado desde DataVolley.');
   const clean=s=>(s||'').replace(/[\x00-\x1f]/g,'').trim();
   const mf=((sec.MATCH||[]).find(x=>x.trim())||'').split(';');
   const match={date:clean(mf[0]),time:clean(mf[1]),season:clean(mf[2]),league:clean(mf[3]),phase:clean(mf[4])};
@@ -3205,7 +3205,9 @@ function liveInfo(M){const R=M.rallies;const last=R[R.length-1];const set=last?l
   const done=last&&Math.max(...sc)>=tgt&&Math.abs(sc[0]-sc[1])>=2;
   const setsWon=[0,0];const bySet={};R.forEach(r=>bySet[r.set]=r);Object.values(bySet).forEach(r=>{const s=r.score,t2=r.set===5?15:25;if(Math.max(...s)>=t2&&Math.abs(s[0]-s[1])>=2)setsWon[s[0]>s[1]?0:1]++});
   const nextRot=t=>{if(!last)return null;let p=last.rot[t];if(!p)return null;if(last.winner===t&&last.servingTeam===1-t)p=p===1?6:p-1;return p};
-  return{set,sc,done,setsWon,serving:last?last.winner:null,rot:[nextRot(0),nextRot(1)],sets:Object.values(bySet)}}
+  const out={set,sc,done,setsWon,serving:last?last.winner:null,rot:[nextRot(0),nextRot(1)],sets:Object.values(bySet)};
+  const ns=!last?1:(done?set+1:null);if(ns&&ns<=5){const lu=[0,1].map(t=>startLineup(M,t,ns));if(lu.some(Boolean)){out.pre=true;out.done=false;out.set=ns;out.sc=[0,0];out.serving=null;out.rot=[0,1].map(t=>setterPosOf(M,t,lu[t]))}}
+  return out}
 function runNow(R){if(!R.length)return null;const w=R[R.length-1].winner;let n=0;for(let i=R.length-1;i>=0&&R[i].winner===w&&R[i].set===R[R.length-1].set;i--)n++;return{team:w,n}}
 
 function aug(S){S.team.forEach(T=>{const m=(...os)=>os.filter(Boolean).reduce((a,o)=>({n:a.n+o.n,kill:a.kill+o.kill,err:a.err+o.err+o.blk}),{n:0,kill:0,err:0});T.k1=m(T.byPhase.r);T.k2=m(T.byPhase.s,T.byPhase.p)});return S}
@@ -3310,7 +3312,12 @@ function tosubHTML(M,L){const us=st.us,them=1-us;const E=setEvents(M,L.set);
    ${ev.length?`<div class="tsl">${ev.slice().reverse().map(x=>`<div class="tse ${x.team===us?'us':'them'}"><b>${x.score[us]}–${x.score[them]}</b><span>${txt(x)}</span></div>`).join('')}</div>`:'<p class="note">Sin tiempos muertos ni cambios en este set.</p>'}
    <p class="note">Según lo anotado en DataVolley. Las entradas del líbero no cuentan como cambio.</p></section>`}
 /* en pista ahora */
-function curLineup(M,t){const R=M.rallies;const last=R[R.length-1];if(!last||!last.lineup||!last.lineup[t])return null;let Lp=last.lineup[t].slice();if(!Lp.some(Boolean))return null;
+/* alineación inicial de un set marcada en DataVolley (antes de jugar el primer punto) */
+function startLineup(M,t,s){const L=[0,0,0,0,0,0];(M.players[t]||[]).forEach(p=>{const sp=(p.startPos||[])[s-1];if(typeof sp==='number'&&sp>=1&&sp<=6&&!p.libero)L[sp-1]=p.num});return L.some(Boolean)?L:null}
+function setterPosOf(M,t,L){if(!L)return null;const i=L.findIndex(n=>n&&((M.nameOf(t,n)||{}).role===5));return i<0?null:i+1}
+function curLineup(M,t){const R=M.rallies;const last=R[R.length-1];if(!last)return startLineup(M,t,1);
+  {const s=last.score,tg=last.set===5?15:25;if(Math.max(...s)>=tg&&Math.abs(s[0]-s[1])>=2){const n=startLineup(M,t,last.set+1);if(n)return n}}
+  if(!last.lineup||!last.lineup[t])return null;let Lp=last.lineup[t].slice();if(!Lp.some(Boolean))return null;
   if(last.winner===t&&last.servingTeam===1-t)Lp=[...Lp.slice(1),Lp[0]];
   M.subs.filter(x=>x.team===t&&x.at===R.length&&x.set===last.set).forEach(x=>{const i=Lp.indexOf(x.out);if(i>=0)Lp[i]=x.in});return Lp}
 const ROLE_AB={1:'Líbero',2:'Receptor',3:'Opuesto',4:'Central',5:'Colocador'};
@@ -3328,7 +3335,7 @@ function courtHTML(M,L,S){const us=st.us,them=1-us;
   return`<section class="card flashme courtc"><div class="ch"><h2>En pista ahora</h2><span class="tag">Colocador en ${L.rot[us]||'–'}</span></div>
    <div class="pitch"><div class="half them">${[1,6,5,2,3,4].map(p=>cell(them,LT,p)).join('')}</div><div class="netl"><span>${esc(M.teams[them].name)}</span><span>RED</span><span>${esc(M.teams[us].name)}</span></div><div class="half us">${[4,3,2,5,6,1].map(p=>cell(us,LU,p)).join('')}</div></div>
    <div class="libs">${lib(them)}${lib(us)}</div>${nxt}
-   ${M.luInfo?`<p class="note">📍 Posiciones deducidas por el panel (${[...M.luInfo.from].join(', ')||'saques'}): conocidas ${M.luInfo.known[us]}/6 nuestras y ${M.luInfo.known[them]}/6 del rival. Se completan solas a medida que sacan los jugadores.</p>`:''}</section>`}
+   ${L.pre?`<p class="note">📋 Alineación inicial del set ${L.set} marcada en DataVolley. Todavía no se ha jugado ningún punto de este set.</p>`:''}${M.luInfo&&!L.pre?`<p class="note">📍 Posiciones deducidas por el panel (${[...M.luInfo.from].join(', ')||'saques'}): conocidas ${M.luInfo.known[us]}/6 nuestras y ${M.luInfo.known[them]}/6 del rival. Se completan solas a medida que sacan los jugadores.</p>`:''}</section>`}
 /* gráficos opcionales */
 function matchHTML(M){const us=st.us;const sets=[...new Set(M.rallies.map(r=>r.set))];
   return`<section class="card flashme"><div class="ch"><h2>Evolución del partido completo</h2></div><div class="mworm">${wormSVG(M.rallies,us,140)}</div>
