@@ -2823,6 +2823,9 @@ const COMBO_ES={X1:'1er tiempo delante',X2:'1er tiempo detrás',X7:'Siete',XM:'1
  X3:'Media por 2',X4:'Media detrás',X9:'Media delante tras 7',XT:'Media por 4',V3:'Alta por 3'};
 const tc=s=>(s||'').toLowerCase().replace(/(^|[\s\-'’])(\p{L})/gu,(m,a,b)=>a+b.toUpperCase());
 
+/* nombres que DataVolley guarda en hexadecimal (0x0F + «2» + hex): se traducen a texto */
+function hexName(s){if(!s)return s;if(s==='2')return'';if(!/^2(?:[0-9A-Fa-f]{2}){2,}$/.test(s))return s;const b=new Uint8Array((s.length-1)/2);for(let i=0;i<b.length;i++)b[i]=parseInt(s.substr(1+i*2,2),16);
+  if(b.some(x=>x<32))return s;try{return new TextDecoder('utf-8',{fatal:true}).decode(b)}catch(e){return new TextDecoder('windows-1252').decode(b)}}
 function parseDVW(text){
   const bom=/^\uFEFF/.test(text);const eol=/\r\n/.test(text)?'\r\n':'\n';
   const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/);
@@ -2833,14 +2836,14 @@ function parseDVW(text){
   const mf=((sec.MATCH||[]).find(x=>x.trim())||'').split(';');
   const match={date:clean(mf[0]),time:clean(mf[1]),season:clean(mf[2]),league:clean(mf[3]),phase:clean(mf[4])};
   const tl=(sec.TEAMS||[]).filter(x=>x.trim());
-  const teams=[0,1].map(i=>{const f=(tl[i]||'').split(';');return{code:clean(f[0]),name:clean(f[1])||(i?'Visitante':'Local'),setsWon:parseInt(f[2])||0,coach:clean(f[3]),assistant:clean(f[4])}});
+  const teams=[0,1].map(i=>{const f=(tl[i]||'').split(';');return{code:clean(f[0]),name:hexName(clean(f[1]))||(i?'Visitante':'Local'),setsWon:parseInt(f[2])||0,coach:clean(f[3]),assistant:clean(f[4])}});
   const setInfo=(sec.SET||[]).filter(x=>x.trim()).map(l=>{const f=l.split(';');const fin=(f[4]||'').replace(/\s+/g,'');
     return{played:/true/i.test(f[0])&&/\d+-\d+/.test(fin),partials:f.slice(1,4).map(s=>s.replace(/\s+/g,'')).filter(Boolean),final:fin,duration:parseInt(f[5])||0}});
   const players=[[],[]];
   [['PLAYERS-H',0],['PLAYERS-V',1]].forEach(([key,t])=>{for(const l of sec[key]||[]){const f=l.split(';');if(f.length<10||!/^\d+$/.test((f[1]||'').trim()))continue;
     let special='',role=0;for(let k=12;k<Math.min(f.length,16);k++){const v=(f[k]||'').trim();if(!special&&(v==='L'||v==='C'))special=v;else if(!role&&/^[1-5]$/.test(v))role=+v}
     const sp=f.slice(3,8).map(s=>s.trim());
-    players[t].push({num:+f[1],id:clean(f[8]),last:tc(clean(f[9])),first:tc(clean(f[10])),nick:clean(f[11]),role:special==='L'?1:role,libero:special==='L'||role===1,captain:special==='C',
+    players[t].push({num:+f[1],id:clean(f[8]),last:tc(hexName(clean(f[9]))),first:tc(hexName(clean(f[10]))),nick:hexName(clean(f[11])),role:special==='L'?1:role,libero:special==='L'||role===1,captain:special==='C',
       startPos:sp.map(s=>/^[1-6]$/.test(s)?+s:(s==='*'?'sub':null)),setsPlayed:sp.filter(Boolean).length})}});
   const combos={};for(const l of sec.ATTACKCOMBINATION||[]){const f=l.split(';');if(!f[0]||!f[0].trim())continue;combos[f[0].trim()]={zone:+f[1]||0,type:(f[3]||'').trim(),desc:clean(f[4]),target:(f[8]||'').trim()}}
   const calls={};for(const l of sec.SETTERCALL||[]){const f=l.split(';');if(f[0]&&f[0].trim())calls[f[0].trim()]=clean(f[2])}
