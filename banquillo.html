@@ -510,6 +510,15 @@ html.nodlg dialog.uidlg[open]{top:0}
  .jch2 span{margin-right:18px}
  #gShB [data-gopen]{white-space:normal;text-align:center;width:100%}
 }
+@media (max-width:820px){
+ .jtwo.one{grid-template-columns:minmax(0,1fr)}
+ .mytpl.compact .jsec{margin-bottom:8px}.mytpl.compact .jsec>h2{font-size:17px;margin-bottom:4px}.mytpl.compact .jsec>h2 small,.mytpl.compact .note{display:none}.mytpl.compact .jcard{padding:8px 10px}
+ .tseg{display:flex;flex-wrap:wrap;gap:6px}.tseg button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font:600 14px var(--body);cursor:pointer}.tseg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+ .ticons{display:flex;flex-wrap:wrap;gap:6px}.ticons button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:20px;cursor:pointer;color:var(--ink)}.ticons button.on{border:2px solid var(--home);background:color-mix(in srgb,var(--home) 12%,var(--surface))}
+ .tmods{display:flex;flex-wrap:wrap;gap:6px}.tmods .btn{padding:7px 12px;font-size:14px}
+ .tchk{display:flex;align-items:flex-start;gap:10px;padding:8px 2px;font-size:15px;cursor:pointer}.tchk input{width:20px;height:20px;margin-top:1px;accent-color:var(--home);flex:none}
+ .ted .note{margin:4px 0 0}
+}
 </style></head>
 <body>
 <header><div class="hin">
@@ -3265,7 +3274,10 @@ function ring(p,col,size=86){const r=(size-10)/2,c=2*Math.PI*r,v=p==null?0:Math.
   return`<svg viewBox="0 0 ${size} ${size}" class="ring"><circle cx="${size/2}" cy="${size/2}" r="${r}" class="rt"/><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${col}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(c*v/100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${size/2} ${size/2})" ${v?'':'stroke-opacity="0"'}/></svg>`}
 
 /* ---------- vista ---------- */
-function render(flash){const main=$('#main');$('#bar').style.display=st.M?'contents':'none';
+function render(flash){const _y=window.scrollY,_lock=document.documentElement.classList.contains('dlgopen');renderInner(flash);
+  /* al redibujar, la página se queda donde estaba (no vuelve arriba) */
+  if(!_lock&&Math.abs(window.scrollY-_y)>2)window.scrollTo(0,_y)}
+function renderInner(flash){const main=$('#main');$('#bar').style.display=st.M?'contents':'none';
   if(!st.M){main.innerHTML=VIEWER?(window.viewerWaitHTML?viewerWaitHTML():''):welcomeHTML();updStatus();return}
   const M=st.M,us=st.us,them=1-us;const L=liveInfo(M);
   const Ms=st.scope==='set'?scopeM(M,L.set):M;const S=aug(analyze(Ms));const U=S.team[us],T=S.team[them];
@@ -3586,6 +3598,7 @@ function mySave(){try{localStorage.setItem('pd-mytpls',JSON.stringify(GL.my))}ca
 GL.my=myLoad();
 (function(){let s=null;try{s=localStorage.getItem('pd-tpl-start');if(!s&&localStorage.getItem('pd-glance')==='0')s='lista'}catch(e){}
   GL.start=(s==='rapida'||s==='lista'||GL.my.some(t=>t.id===s))?s:(GL.my[0]?GL.my[0].id:'rapida');GL.tpl=GL.start})();
+setTimeout(()=>{try{tplApplyScope()}catch(_){}},0);
 function tplList(){return[...GL.my.map(t=>[t.id,t.name]),['rapida','Rápida'],['lista','Lista']]}
 function myTpl(id){return GL.my.find(t=>t.id===id)||null}
 function glanceOn(){return VIEWER&&GL.tpl!=='lista'&&window.innerWidth<=820&&!!st.M}
@@ -3594,7 +3607,7 @@ function glFit(){const g=document.getElementById('glance');const nv=document.que
   if(GL.tpl!=='rapida'){g.style.height='';return}
   const hd=document.querySelector('header'),bar=document.getElementById('tplBar');
   const h=Math.max(400,window.innerHeight-(hd?hd.offsetHeight:0)-(nv?nv.offsetHeight:0)-20-(bar?bar.offsetHeight+8:0));g.style.setProperty('--gh',h+'px');g.style.height=h+'px';g.classList.toggle('sm',h<560)}
-function tplBarHTML(){return`<div class="tpls" role="tablist" aria-label="Plantilla">${tplList().map(([k,l])=>`<button role="tab" aria-selected="${GL.tpl===k}" class="${GL.tpl===k?'on':''}" data-tpl="${esc(k)}">${esc(l)}</button>`).join('')}<button class="tnew" data-tedit="new" aria-label="Crear una plantilla">＋ Nueva</button></div>
+function tplBarHTML(){return`<div class="tpls" role="tablist" aria-label="Plantilla">${tplList().map(([k,l])=>{const T=myTpl(k);return`<button role="tab" aria-selected="${GL.tpl===k}" class="${GL.tpl===k?'on':''}" data-tpl="${esc(k)}">${T&&T.icon?T.icon+' ':''}${esc(l)}</button>`}).join('')}<button class="tnew" data-tedit="new" aria-label="Crear una plantilla">＋ Nueva</button></div>
   <div class="tscope"><button class="${st.scope==='set'?'on':''}" data-tsc="set">Set ${st._curSet||''}</button><button class="${st.scope==='match'?'on':''}" data-tsc="match">Partido</button></div>`}
 function glanceMount(){const main=document.getElementById('main');let g=document.getElementById('glance'),bar=document.getElementById('tplBar');
   if(GL.tpl!=='rapida'&&GL.tpl!=='lista'&&!myTpl(GL.tpl))GL.tpl='rapida';
@@ -3602,12 +3615,13 @@ function glanceMount(){const main=document.getElementById('main');let g=document
   if(!on){if(g)g.remove();if(bar)bar.remove();glSheetRefresh();return}
   if(!bar){main.insertAdjacentHTML('afterbegin','<div id="tplBar" class="tplbar"></div>');bar=document.getElementById('tplBar')}
   bar.innerHTML=tplBarHTML();
-  const on1=bar.querySelector('.tpls .on');if(on1&&on1.scrollIntoView)try{on1.scrollIntoView({block:'nearest',inline:'nearest'})}catch(_){}
+  /* solo se desplaza la fila de plantillas (en horizontal); nunca la página */
+  {const row=bar.querySelector('.tpls'),on1=row&&row.querySelector('.on');if(on1){const l=on1.offsetLeft-row.offsetLeft,r=l+on1.offsetWidth;if(l<row.scrollLeft)row.scrollLeft=l-8;else if(r>row.scrollLeft+row.clientWidth)row.scrollLeft=r-row.clientWidth+8}}
   if(GL.tpl==='lista'){if(g)g.remove();glFit();glSheetRefresh();return}
   if(!g){bar.insertAdjacentHTML('afterend','<div id="glance"></div>');g=document.getElementById('glance')}
   const T=myTpl(GL.tpl);
-  if(T){g.className='mytpl';g.innerHTML=myTplHTML(T)}
-  else{GL.nAl=Math.max(1,window.innerHeight-170>=700?3:2);g.className='gl';g.innerHTML=glanceHTML()}
+  if(T){const TT=tplDefaults(T);g.className='mytpl'+(TT.compact?' compact':'');g.style.zoom=TT.zoom&&TT.zoom!==1?TT.zoom:'';g.innerHTML=myTplHTML(T)}
+  else{GL.curTeams='both';g.style.zoom='';GL.nAl=Math.max(1,window.innerHeight-170>=700?3:2);g.className='gl';g.innerHTML=glanceHTML()}
   glFit();glSheetRefresh();glHint()}
 /* una plantilla del usuario: sus secciones en el orden elegido */
 function secHTML(k,ctx){const C=st._ctx;const {M,L,S,F}=C;const sf=f=>{try{return f()}catch(e){return'<p class="jnone">No se ha podido dibujar esta sección.</p>'}};
@@ -3619,9 +3633,9 @@ function secHTML(k,ctx){const C=st._ctx;const {M,L,S,F}=C;const sf=f=>{try{retur
   if(k==='avisos')return`<div class="secclick" data-g="alerts" role="button" tabindex="0">${sf(()=>alertsHTML(M,C.Ms,S,L))}</div>`;
   if(k==='ultimos')return`<div class="secclick" data-g="feed" role="button" tabindex="0">${sf(()=>feedHTML(M))}</div>`;
   return''}
-function myTplHTML(T){const ctx={};const secs=T.secs.filter(k=>SEC_T[k]);
-  const nav=secs.length>2?`<nav class="jnav">${secs.map(k=>`<button data-jgo="sec-${k}">${esc(SEC_T[k].split(' (')[0])}</button>`).join('')}</nav>`:'';
-  const head=`<div class="mthead"><b>${esc(T.name)}</b><button class="btn" data-tedit="${esc(T.id)}">✎ Editar</button></div>`;
+function myTplHTML(T){T=tplDefaults(T);const ctx={teams:T.teams};GL.curTeams=T.teams;const secs=T.secs.filter(k=>SEC_T[k]);
+  const nav=T.nav&&secs.length>2?`<nav class="jnav">${secs.map(k=>`<button data-jgo="sec-${k}">${esc(SEC_T[k].split(' (')[0])}</button>`).join('')}</nav>`:'';
+  const head=`<div class="mthead"><b>${T.icon?T.icon+' ':''}${esc(T.name)}</b><button class="btn" data-tedit="${esc(T.id)}">✎ Editar</button></div>`;
   return head+nav+(secs.map(k=>`<section class="jsec" id="sec-${k}"><h2>${esc(SEC_T[k].split(' (')[0])}${SEC_SUB[k]?` <small>${SEC_SUB[k]}</small>`:''}</h2>${secHTML(k,ctx)}</section>`).join('')||'<p class="jnone">Esta plantilla no tiene secciones. Pulsa «Editar» para añadirlas.</p>')}
 /* rotaciones de los dos equipos (side-out con el colocador en cada posición) */
 function rotBothHTML(){const C=st._ctx;const {M,L,S}=C;const us=st.us;
@@ -3629,33 +3643,60 @@ function rotBothHTML(){const C=st._ctx;const {M,L,S}=C;const us=st.us;
     return`<div class="jcard jrot" data-g="rot:${t}" role="button" tabindex="0"><div class="jch2 ${t===us?'u':'r'}"><i></i>${t===us?'Nosotros':'Rival'}<span>${cur?'Ahora P'+cur:''}</span></div>
      <div class="jrc"><div class="jnet">RED</div>${[4,3,2,5,6,1].map(p=>{const r=R[p];const so=pct(r.so.won,r.so.n),bp=pct(r.bp.won,r.bp.n);const net=r.won-r.lost;
        return`<div class="jrp ${p===cur?'now':''} ${r.so.n>=2?glLv(so,60,45):''}"><span class="jpp">P${p}</span><b>${fp(so)}</b><small>SO ${r.so.won}/${r.so.n}</small><small>BP ${fp(bp)}</small><i class="${net>0?'pos':net<0?'neg':''}">${net>0?'+':''}${net}</i></div>`}).join('')}</div></div>`};
-  return`<div class="j2">${one(us)}${one(1-us)}</div>`}
+  const TS=GL.curTeams==='us'?[us]:GL.curTeams==='them'?[1-us]:[us,1-us];return`<div class="j2">${TS.map(one).join('')}</div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tpl],[data-tsc],[data-jgo]');if(!b)return;
-  if(b.dataset.tpl){GL.tpl=b.dataset.tpl;render();window.scrollTo({top:0})}
+  if(b.dataset.tpl){GL.tpl=b.dataset.tpl;tplApplyScope();render();window.scrollTo({top:0})}
   else if(b.dataset.tsc){st.scope=b.dataset.tsc;UI.scope=st.scope;saveUI();render()}
   else if(b.dataset.jgo){const s=document.getElementById(b.dataset.jgo);if(s){const hd=document.querySelector('header');window.scrollTo({top:s.getBoundingClientRect().top+window.scrollY-(hd?hd.offsetHeight:0)-8,behavior:'smooth'})}}});
 /* ---- editor de plantillas ---- */
 let TED=null;
-function tedOpen(id){const T=id==='new'?null:myTpl(id);TED={id:T?T.id:'t'+Date.now().toString(36),isNew:!T,name:T?T.name:'',secs:T?T.secs.slice():[]};glOpen('edit')}
+const TICONS=['📋','⏱️','🏐','🎯','🛡️','🔥','📊','⭐'];
+const TMODELS=[['Tiempo muerto',['marcador','estado','pista','avisos']],['Recepción y saque',['recepcion','saque','pista']],['Ataque',['estado','ataque']],
+  ['Rotaciones',['pista','rotaciones','tiempos']],['Todo',SECS.map(s=>s[0])]];
+function tplDefaults(T){return Object.assign({icon:'',teams:'both',scope:'auto',zoom:1,nav:true,compact:false},T||{})}
+function tedOpen(id,copyOf){const T=id==='new'?(copyOf?myTpl(copyOf):null):myTpl(id);
+  TED=Object.assign(tplDefaults(T?JSON.parse(JSON.stringify(T)):{}),{id:(T&&!copyOf)?T.id:'t'+Date.now().toString(36),isNew:!T||!!copyOf,name:T?(copyOf?T.name+' (copia)':T.name):'',secs:T?T.secs.slice():[]});
+  TED.start=GL.start===TED.id;glOpen('edit')}
+function tedSeg(key,opts){return`<div class="tseg">${opts.map(([v,l])=>`<button class="${String(TED[key])===String(v)?'on':''}" data-topt="${key}:${v}">${l}</button>`).join('')}</div>`}
 function tedHTML(){const on=TED.secs,off=SECS.map(s=>s[0]).filter(k=>!on.includes(k));
-  const row=(k,i,act)=>`<div class="tedr ${act?'on':''}"><label><input type="checkbox" data-tsec="${k}" ${act?'checked':''}><span>${esc(SEC_T[k])}</span></label>${act?`<button class="tmv" data-tmv="${i}:-1" ${i===0?'disabled':''} aria-label="Subir">↑</button><button class="tmv" data-tmv="${i}:1" ${i===on.length-1?'disabled':''} aria-label="Bajar">↓</button>`:''}</div>`;
-  return`<section class="card ted"><label class="tedn">Nombre de la plantilla<input id="tedName" maxlength="24" placeholder="Por ejemplo: Tiempo muerto" value="${esc(TED.name)}"></label>
-   <h3>Secciones que se ven, en este orden</h3>${on.length?on.map((k,i)=>row(k,i,true)).join(''):'<p class="note">Marca abajo las secciones que quieras ver.</p>'}
+  const row=(k,i,act)=>`<div class="tedr ${act?'on':''}"><label><input type="checkbox" data-tsec="${k}" ${act?'checked':''}><span>${esc(SEC_T[k])}</span></label>${act?`<button class="tmv" data-tmv="${i}:top" ${i===0?'disabled':''} aria-label="Poner la primera">⤒</button><button class="tmv" data-tmv="${i}:-1" ${i===0?'disabled':''} aria-label="Subir">↑</button><button class="tmv" data-tmv="${i}:1" ${i===on.length-1?'disabled':''} aria-label="Bajar">↓</button>`:''}</div>`;
+  return`<section class="card ted">
+   <label class="tedn">Nombre<input id="tedName" maxlength="24" placeholder="Por ejemplo: Tiempo muerto" value="${esc(TED.name)}"></label>
+   <h3>Icono</h3><div class="ticons"><button class="${TED.icon?'':'on'}" data-topt="icon:">—</button>${TICONS.map(i=>`<button class="${TED.icon===i?'on':''}" data-topt="icon:${i}">${i}</button>`).join('')}</div>
+   ${TED.isNew&&!on.length?`<h3>Empezar desde un modelo</h3><div class="tmods">${TMODELS.map(([n],i)=>`<button class="btn" data-tmodel="${i}">${esc(n)}</button>`).join('')}</div>`:''}
+   <h3>Secciones que se ven, en este orden</h3>${on.length?on.map((k,i)=>row(k,i,true)).join(''):'<p class="note">Marca abajo las secciones que quieras ver, o empieza desde un modelo.</p>'}
    ${off.length?`<h3>Añadir</h3>${off.map(k=>row(k,0,false)).join('')}`:''}
-   <div class="tedb"><button class="btn primary" data-tsave>Guardar</button>${TED.isNew?'':'<button class="btn danger" data-tdel>Eliminar</button>'}<button class="btn" data-tcancel>Cancelar</button></div>
-   <p class="note">Las plantillas se guardan en este móvil. Aparecen arriba, junto a «Rápida» y «Lista», y puedes elegir cuál se abre al entrar en el menú ⋯.</p></section>`}
-function tedRedraw(){const b=document.getElementById('gShB');if(b&&GL.sheet==='edit'){const n=document.getElementById('tedName');if(n)TED.name=n.value;b.innerHTML=tedHTML()}}
+   <h3>Equipos que se muestran</h3>${tedSeg('teams',[['both','Los dos'],['us','Solo nosotros'],['them','Solo rival']])}
+   <p class="note">Se aplica a recepción, saque, ataque y rotaciones.</p>
+   <h3>Datos</h3>${tedSeg('scope',[['auto','Lo que elija arriba'],['set','Siempre el set'],['match','Siempre el partido']])}
+   <h3>Tamaño de la letra</h3>${tedSeg('zoom',[[1,'Normal'],[1.15,'Grande'],[1.3,'Muy grande']])}
+   <h3>Más opciones</h3>
+   <label class="tchk"><input type="checkbox" data-tbool="nav" ${TED.nav?'checked':''}><span>Botones para saltar a cada sección</span></label>
+   <label class="tchk"><input type="checkbox" data-tbool="compact" ${TED.compact?'checked':''}><span>Modo compacto (menos espacio entre secciones, sin explicaciones)</span></label>
+   <label class="tchk"><input type="checkbox" data-tbool="start" ${TED.start?'checked':''}><span>Abrir el banquillo con esta plantilla</span></label>
+   <div class="tedb"><button class="btn primary" data-tsave>Guardar</button><button class="btn" data-tcancel>Cancelar</button>
+    ${TED.isNew?'':`<button class="btn" data-tdup>Duplicar</button><button class="btn danger" data-tdel>Eliminar</button>`}</div>
+   <p class="note">Las plantillas se guardan en este móvil y aparecen arriba, junto a «Rápida» y «Lista».</p></section>`}
+function tedRedraw(){const d=document.getElementById('gSheet'),b=document.getElementById('gShB');if(b&&GL.sheet==='edit'){const n=document.getElementById('tedName');if(n)TED.name=n.value;const y=d?d.scrollTop:0;b.innerHTML=tedHTML();if(d)d.scrollTop=y}}
+function tedClose(){TED=null;const d=document.getElementById('gSheet');if(d&&d.open)d.close()}
+function tplApplyScope(){const T=myTpl(GL.tpl);if(T&&(T.scope==='set'||T.scope==='match')){st.scope=T.scope;UI.scope=st.scope}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tedit]');if(b){e.preventDefault();e.stopPropagation();tedOpen(b.dataset.tedit);return}
   if(!TED||GL.sheet!=='edit')return;
-  const mv=e.target.closest('[data-tmv]');if(mv){const [i,d]=mv.dataset.tmv.split(':').map(Number);const j=i+d;if(j>=0&&j<TED.secs.length){const a=TED.secs;[a[i],a[j]]=[a[j],a[i]]}tedRedraw();return}
-  if(e.target.closest('[data-tsave]')){const n=(document.getElementById('tedName').value||'').trim()||'Mi plantilla';TED.name=n;
-    const T={id:TED.id,name:n,secs:TED.secs.slice()};const i=GL.my.findIndex(x=>x.id===T.id);if(i>=0)GL.my[i]=T;else GL.my.push(T);mySave();GL.tpl=T.id;TED=null;
-    const d=document.getElementById('gSheet');if(d)d.close();render();window.scrollTo({top:0});return}
+  const mv=e.target.closest('[data-tmv]');if(mv){const [i,d]=mv.dataset.tmv.split(':');const a=TED.secs;const k=+i;if(d==='top'){a.unshift(a.splice(k,1)[0])}else{const j=k+(+d);if(j>=0&&j<a.length)[a[k],a[j]]=[a[j],a[k]]}tedRedraw();return}
+  const op=e.target.closest('[data-topt]');if(op){const i=op.dataset.topt.indexOf(':');const key=op.dataset.topt.slice(0,i);let v=op.dataset.topt.slice(i+1);if(key==='zoom')v=+v;TED[key]=v;tedRedraw();return}
+  const md=e.target.closest('[data-tmodel]');if(md){const m=TMODELS[+md.dataset.tmodel];TED.secs=m[1].slice();const n=document.getElementById('tedName');if(n&&!n.value.trim())n.value=m[0];tedRedraw();return}
+  if(e.target.closest('[data-tsave]')){const n=(document.getElementById('tedName').value||'').trim()||'Mi plantilla';
+    const T={id:TED.id,name:n,secs:TED.secs.slice(),icon:TED.icon||'',teams:TED.teams,scope:TED.scope,zoom:TED.zoom,nav:!!TED.nav,compact:!!TED.compact};
+    const i=GL.my.findIndex(x=>x.id===T.id);if(i>=0)GL.my[i]=T;else GL.my.push(T);mySave();
+    if(TED.start){GL.start=T.id;try{localStorage.setItem('pd-tpl-start',T.id)}catch(_){}}else if(GL.start===T.id){GL.start='rapida';try{localStorage.setItem('pd-tpl-start','rapida')}catch(_){}}
+    GL.tpl=T.id;tedClose();tplApplyScope();render();window.scrollTo({top:0});return}
+  if(e.target.closest('[data-tdup]')){const src=TED.id;tedClose();setTimeout(()=>tedOpen('new',src),50);return}
   if(e.target.closest('[data-tdel]')){if(!confirm('¿Eliminar la plantilla «'+TED.name+'»?'))return;GL.my=GL.my.filter(x=>x.id!==TED.id);mySave();
-    if(GL.start===TED.id){GL.start='rapida';try{localStorage.setItem('pd-tpl-start','rapida')}catch(_){}}GL.tpl='rapida';TED=null;const d=document.getElementById('gSheet');if(d)d.close();render();return}
-  if(e.target.closest('[data-tcancel]')){TED=null;const d=document.getElementById('gSheet');if(d)d.close()}},true);
-document.addEventListener('change',e=>{const c=e.target.closest('[data-tsec]');if(!c||!TED)return;const k=c.dataset.tsec;
-  if(c.checked){if(!TED.secs.includes(k))TED.secs.push(k)}else TED.secs=TED.secs.filter(x=>x!==k);tedRedraw()});
+    if(GL.start===TED.id){GL.start='rapida';try{localStorage.setItem('pd-tpl-start','rapida')}catch(_){}}GL.tpl='rapida';tedClose();render();return}
+  if(e.target.closest('[data-tcancel]')){tedClose()}},true);
+document.addEventListener('change',e=>{if(!TED)return;const c=e.target.closest('[data-tsec]');
+  if(c){const k=c.dataset.tsec;if(c.checked){if(!TED.secs.includes(k))TED.secs.push(k)}else TED.secs=TED.secs.filter(x=>x!==k);tedRedraw();return}
+  const bo=e.target.closest('[data-tbool]');if(bo){TED[bo.dataset.tbool]=bo.checked}});
 document.addEventListener('input',e=>{if(e.target.id==='tedName'&&TED)TED.name=e.target.value});
 
 /* --- datos --- */
@@ -3699,8 +3740,9 @@ function secsRS(){const C=st._ctx;const {M,L,Ms,S}=C;const us=st.us,them=1-us;co
     return`<div class="jpc ${t===us?'u':'r'}${info.role===5?' set':''}${sv?' srv':''}"><b>${n||'?'}</b><span>${n?nm(info):''}</span><small>${info.role===5?'Colocador':sv?'Saca':'P'+pos}</small></div>`};
   const court=L.done?`<p class="jnone">Fin del set ${L.set}. La rotación aparecerá al empezar el siguiente.</p>`:
     `<div class="jpitch"><div class="jhalf">${[1,6,5,2,3,4].map(p=>cell(them,LT,p)).join('')}</div><div class="jnetl"><span>▲ Rival · colocador P${L.rot[them]||'–'}</span><b>RED</b><span>Nosotros · colocador P${L.rot[us]||'–'} ▼</span></div><div class="jhalf">${[4,3,2,5,6,1].map(p=>cell(us,LU,p)).join('')}</div></div>`;
-  return{recepcion:`<div class="jcard jtwo" data-g="statsT:${us}:R" role="button" tabindex="0">${rec(us)}${rec(them)}</div>`,
-    saque:`<div class="jcard jtwo jnoa">${srv(us)}${srv(them)}</div>`,
+  const TS=GL.curTeams==='us'?[us]:GL.curTeams==='them'?[them]:[us,them];const one=TS.length===1?' one':'';
+  return{recepcion:`<div class="jcard jtwo${one}" data-g="statsT:${TS[0]}:R" role="button" tabindex="0">${TS.map(rec).join('')}</div>`,
+    saque:`<div class="jcard jtwo jnoa${one}">${TS.map(srv).join('')}</div>`,
     pista:`<div class="jcard" data-g="court" role="button" tabindex="0">${court}</div>`}}
 /* ===== Secciones: estado del partido y ataque individual ===== */
 GL.edT=null;
@@ -3728,7 +3770,7 @@ function secsAT(){const C=st._ctx;const {M,L,Ms,S,U,T,PU}=C;const us=st.us,them=
     <div class="eh"><span></span><span class="u">Nosotros</span><span></span><span class="r">Rival</span></div>${body}
     <div class="ex"><span>TM ${E.to[us].length}/2 · Camb. ${E.sub[us].length}/6</span>${run&&run.n>=2&&!L.done?`<span class="${run.team===us?'g':'b'}">Parcial ${run.n}–0 ${run.team===us?'nuestro':'rival'}</span>`:''}<span>TM ${E.to[them].length}/2 · Camb. ${E.sub[them].length}/6</span></div>${verdict}</div>`;
   /* ataque individual, comparable entre jugadores */
-  const t=GL.edT==null?us:GL.edT;const X=S.team[t];const Lu=L.done?null:curLineup(M,t);const onC=n=>Lu&&Lu.includes(n);
+  const t=GL.curTeams==='us'?us:GL.curTeams==='them'?them:(GL.edT==null?us:GL.edT);const X=S.team[t];const Lu=L.done?null:curLineup(M,t);const onC=n=>Lu&&Lu.includes(n);
   const atts=Ms.actions.filter(a=>a.team===t&&a.skill==='A');
   const ps=X.players.filter(p=>!(p.info&&p.info.libero)&&(p.A.n||onC(p.num)));
   const maxN=Math.max(1,...ps.map(p=>p.A.n));
@@ -3747,7 +3789,7 @@ function secsAT(){const C=st._ctx;const {M,L,Ms,S,U,T,PU}=C;const us=st.us,them=
   else list=ED_ROLES.map(([r,lbl])=>{const g=ps.filter(p=>(p.info.role||0)===r).sort((a,b)=>b.A.n-a.A.n||a.num-b.num);if(!g.length)return'';
     const tot=g.reduce((o,p)=>{o.n+=p.A.n;o.kill+=p.A.kill;o.err+=p.A.err;o.blk+=p.A.blk;return o},{n:0,kill:0,err:0,blk:0});const te=eff(tot);
     return`<div class="eg"><div class="egh"><b>${lbl}</b><span>${tot.kill}/${tot.n} · ef. <em class="${glLv(te,30,15)}">${fp(te)}</em></span></div>${g.map(p=>row(p,false)).join('')}</div>`}).join('');
-  return{estado:state,ataque:`<div class="etools"><div class="eseg"><button class="${t===us?'on':''}" data-edt="${us}">Nosotros</button><button class="${t!==us?'on':''}" data-edt="${them}">Rival</button></div>
+  return{estado:state,ataque:`<div class="etools">${GL.curTeams==='both'||!GL.curTeams?`<div class="eseg"><button class="${t===us?'on':''}" data-edt="${us}">Nosotros</button><button class="${t!==us?'on':''}" data-edt="${them}">Rival</button></div>`:''}
      <div class="eseg"><button class="${view==='pos'?'on':''}" data-edv="pos">Por posición</button><button class="${view==='rank'?'on':''}" data-edv="rank">Ranking</button></div></div>
     <div class="jcard jnoa epw"><div class="ephd"><span>Jugador</span><span>Pto/Atq</span><span>% pto</span><span>Err</span><span>Efic.</span></div>
      <div class="elg"><span><i class="k"></i>Punto</span><span><i class="p"></i>En juego</span><span><i class="e"></i>Error</span><span><i class="b"></i>Bloqueado</span><span class="r">Eficacia: −50 · <b>0</b> · +100</span></div>
@@ -3829,9 +3871,9 @@ function glOpen(k){let d=document.getElementById('gSheet');
   if(k.startsWith('stats:')){st.stSk=st.stSk||{};st.stSk[st.us]=k.slice(6);st.stSk[1-st.us]=k.slice(6);st.stTeam=st.us}
   if(k.startsWith('statsT:')){const p=k.split(':');st.stSk=st.stSk||{};st.stSk[0]=p[2];st.stSk[1]=p[2];st.stTeam=+p[1]}
   GL.sheet=k;glSheetRefresh(true);if(!d.open)d.showModal();try{localStorage.setItem('pd-glhint','9')}catch(_){}}
-function glSheetRefresh(top){const d=document.getElementById('gSheet');if(!d||!GL.sheet)return;if(GL.sheet==='edit'&&!top)return;if(!st._ctx&&GL.sheet!=='edit'){d.close();return}const b=document.getElementById('gShB');const y=b.scrollTop;
+function glSheetRefresh(top){const d=document.getElementById('gSheet');if(!d||!GL.sheet)return;if(GL.sheet==='edit'&&!top)return;if(!st._ctx&&GL.sheet!=='edit'){d.close();return}const b=document.getElementById('gShB');const y=b.scrollTop,yd=d.scrollTop;
   const K=GL.sheet;document.getElementById('gShT').textContent=K.startsWith('stats')?'Estadísticas por jugador':K==='edit'?(TED&&!TED.isNew?'Editar plantilla':'Nueva plantilla'):K.startsWith('srv:')?'Direcciones de saque':K.startsWith('atk:')?'Direcciones de ataque':K.startsWith('rot:')?(+K.split(':')[1]===st.us?'Nuestras rotaciones':'Rotaciones del rival'):GL_T[K];
-  b.innerHTML=glSheetBody(GL.sheet);b.scrollTop=top?0:y}
+  const html=glSheetBody(GL.sheet);if(!top&&html===GL.lastSheetHTML)return;GL.lastSheetHTML=html;b.innerHTML=html;if(top){b.scrollTop=0;d.scrollTop=0}else{b.scrollTop=y;d.scrollTop=yd}}
 document.addEventListener('click',e=>{const t=e.target.closest('#glance [data-g]');if(t)glOpen(t.dataset.g)});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('#glance [data-g][role=button]')){e.preventDefault();glOpen(e.target.dataset.g)}});
 function glHint(){let n=0;try{n=+(localStorage.getItem('pd-glhint')||0)}catch(_){}if(n>=3||glHint.done)return;glHint.done=true;try{localStorage.setItem('pd-glhint',n+1)}catch(_){}
@@ -3880,7 +3922,8 @@ document.addEventListener('click',e=>{const b=e.target.closest('#gSheet [data-go
     else if(!open&&locked){locked=false;window._dlgT=Date.now();html.classList.remove('dlgopen');b.style.position='';b.style.top='';b.style.left='';b.style.right='';b.style.width='';window.scrollTo(0,y);const h=document.querySelector('header');if(h)h.classList.remove('hide')}};
   new MutationObserver(sync).observe(document.body,{subtree:true,attributes:true,attributeFilter:['open'],childList:true});
   document.addEventListener('close',()=>setTimeout(sync,0),true)})();
-let _rs;window.addEventListener('resize',()=>{clearTimeout(_rs);_rs=setTimeout(()=>{if(st.M)render()},250)});
+/* al bajar en el móvil, la barra del navegador se esconde y cambia el alto de la ventana: solo se redibuja si cambia el ancho */
+let _rs,_rw=window.innerWidth;window.addEventListener('resize',()=>{clearTimeout(_rs);_rs=setTimeout(()=>{if(window.innerWidth===_rw){if(window.glFit)glFit();return}_rw=window.innerWidth;if(st.M)render()},250)});
 
 /* ===== Mensajes entre el scout y el banquillo ===== */
 const CH={msgs:[],last:0,unread:0,open:false,busy:false,timer:null,sending:false};
